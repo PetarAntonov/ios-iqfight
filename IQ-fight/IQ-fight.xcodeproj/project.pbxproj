@@ -22,6 +22,23 @@
 		A419B09A1905553900E60374 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419B07E1905553900E60374 /* CoreData.framework */; };
 		A419B0A21905553900E60374 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A419B0A01905553900E60374 /* InfoPlist.strings */; };
 		A419B0A41905553900E60374 /* IQ_fightTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0A31905553900E60374 /* IQ_fightTests.m */; };
+		A419B0AF1905586E00E60374 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A419B0AE1905586E00E60374 /* Storyboard.storyboard */; };
+		A419B0B31905599200E60374 /* IQLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0B21905599200E60374 /* IQLoginViewController.m */; };
+		A419B0B6190559C400E60374 /* IQHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0B5190559C400E60374 /* IQHomeViewController.m */; };
+		A419B0CB1905783900E60374 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0B91905783900E60374 /* AFHTTPClient.m */; };
+		A419B0CC1905783900E60374 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0BB1905783900E60374 /* AFHTTPRequestOperation.m */; };
+		A419B0CD1905783900E60374 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0BD1905783900E60374 /* AFImageRequestOperation.m */; };
+		A419B0CE1905783900E60374 /* AFJSONRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0BF1905783900E60374 /* AFJSONRequestOperation.m */; };
+		A419B0CF1905783900E60374 /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0C11905783900E60374 /* AFNetworkActivityIndicatorManager.m */; };
+		A419B0D01905783900E60374 /* AFPropertyListRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0C41905783900E60374 /* AFPropertyListRequestOperation.m */; };
+		A419B0D11905783900E60374 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0C61905783900E60374 /* AFURLConnectionOperation.m */; };
+		A419B0D21905783900E60374 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0C81905783900E60374 /* AFXMLRequestOperation.m */; };
+		A419B0D31905783900E60374 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0CA1905783900E60374 /* UIImageView+AFNetworking.m */; };
+		A419B0D81905793200E60374 /* IQServerCommunication.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0D71905793200E60374 /* IQServerCommunication.m */; };
+		A419B0DB19057F5100E60374 /* IQGamesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0DA19057F5100E60374 /* IQGamesViewController.m */; };
+		A419B0E21905848900E60374 /* IQGameTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E11905848900E60374 /* IQGameTableViewCell.m */; };
+		A419B0E5190585B100E60374 /* IQGameLobyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E4190585B100E60374 /* IQGameLobyViewController.m */; };
+		A419B0E81905929B00E60374 /* IQGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E71905929B00E60374 /* IQGameViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +70,40 @@
 		A419B09F1905553900E60374 /* IQ-fightTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IQ-fightTests-Info.plist"; sourceTree = "<group>"; };
 		A419B0A11905553900E60374 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A419B0A31905553900E60374 /* IQ_fightTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IQ_fightTests.m; sourceTree = "<group>"; };
+		A419B0AE1905586E00E60374 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		A419B0B11905599200E60374 /* IQLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQLoginViewController.h; sourceTree = "<group>"; };
+		A419B0B21905599200E60374 /* IQLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQLoginViewController.m; sourceTree = "<group>"; };
+		A419B0B4190559C400E60374 /* IQHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQHomeViewController.h; sourceTree = "<group>"; };
+		A419B0B5190559C400E60374 /* IQHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQHomeViewController.m; sourceTree = "<group>"; };
+		A419B0B81905783900E60374 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
+		A419B0B91905783900E60374 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
+		A419B0BA1905783900E60374 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		A419B0BB1905783900E60374 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
+		A419B0BC1905783900E60374 /* AFImageRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFImageRequestOperation.h; sourceTree = "<group>"; };
+		A419B0BD1905783900E60374 /* AFImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageRequestOperation.m; sourceTree = "<group>"; };
+		A419B0BE1905783900E60374 /* AFJSONRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFJSONRequestOperation.h; sourceTree = "<group>"; };
+		A419B0BF1905783900E60374 /* AFJSONRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFJSONRequestOperation.m; sourceTree = "<group>"; };
+		A419B0C01905783900E60374 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
+		A419B0C11905783900E60374 /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
+		A419B0C21905783900E60374 /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
+		A419B0C31905783900E60374 /* AFPropertyListRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFPropertyListRequestOperation.h; sourceTree = "<group>"; };
+		A419B0C41905783900E60374 /* AFPropertyListRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFPropertyListRequestOperation.m; sourceTree = "<group>"; };
+		A419B0C51905783900E60374 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
+		A419B0C61905783900E60374 /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		A419B0C71905783900E60374 /* AFXMLRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFXMLRequestOperation.h; sourceTree = "<group>"; };
+		A419B0C81905783900E60374 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
+		A419B0C91905783900E60374 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
+		A419B0CA1905783900E60374 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		A419B0D61905793200E60374 /* IQServerCommunication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQServerCommunication.h; sourceTree = "<group>"; };
+		A419B0D71905793200E60374 /* IQServerCommunication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQServerCommunication.m; sourceTree = "<group>"; };
+		A419B0D919057F5100E60374 /* IQGamesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQGamesViewController.h; sourceTree = "<group>"; };
+		A419B0DA19057F5100E60374 /* IQGamesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGamesViewController.m; sourceTree = "<group>"; };
+		A419B0E01905848900E60374 /* IQGameTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQGameTableViewCell.h; sourceTree = "<group>"; };
+		A419B0E11905848900E60374 /* IQGameTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGameTableViewCell.m; sourceTree = "<group>"; };
+		A419B0E3190585B100E60374 /* IQGameLobyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQGameLobyViewController.h; sourceTree = "<group>"; };
+		A419B0E4190585B100E60374 /* IQGameLobyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGameLobyViewController.m; sourceTree = "<group>"; };
+		A419B0E61905929B00E60374 /* IQGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQGameViewController.h; sourceTree = "<group>"; };
+		A419B0E71905929B00E60374 /* IQGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGameViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +168,11 @@
 			children = (
 				A419B0891905553900E60374 /* IQAppDelegate.h */,
 				A419B08A1905553900E60374 /* IQAppDelegate.m */,
+				A419B0D41905783E00E60374 /* Libraries */,
+				A419B0D5190578BA00E60374 /* Services */,
+				A419B0AD1905584200E60374 /* Storyboards */,
+				A419B0B01905596300E60374 /* ViewControllers */,
+				A419B0DC1905842E00E60374 /* CustomViews */,
 				A419B08F1905553900E60374 /* Images.xcassets */,
 				A419B08C1905553900E60374 /* IQ_fight.xcdatamodeld */,
 				A419B0811905553900E60374 /* Supporting Files */,
@@ -151,6 +207,83 @@
 				A419B0A01905553900E60374 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A419B0AD1905584200E60374 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				A419B0AE1905586E00E60374 /* Storyboard.storyboard */,
+			);
+			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		A419B0B01905596300E60374 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				A419B0B11905599200E60374 /* IQLoginViewController.h */,
+				A419B0B21905599200E60374 /* IQLoginViewController.m */,
+				A419B0B4190559C400E60374 /* IQHomeViewController.h */,
+				A419B0B5190559C400E60374 /* IQHomeViewController.m */,
+				A419B0D919057F5100E60374 /* IQGamesViewController.h */,
+				A419B0DA19057F5100E60374 /* IQGamesViewController.m */,
+				A419B0E3190585B100E60374 /* IQGameLobyViewController.h */,
+				A419B0E4190585B100E60374 /* IQGameLobyViewController.m */,
+				A419B0E61905929B00E60374 /* IQGameViewController.h */,
+				A419B0E71905929B00E60374 /* IQGameViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		A419B0B71905783900E60374 /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				A419B0B81905783900E60374 /* AFHTTPClient.h */,
+				A419B0B91905783900E60374 /* AFHTTPClient.m */,
+				A419B0BA1905783900E60374 /* AFHTTPRequestOperation.h */,
+				A419B0BB1905783900E60374 /* AFHTTPRequestOperation.m */,
+				A419B0BC1905783900E60374 /* AFImageRequestOperation.h */,
+				A419B0BD1905783900E60374 /* AFImageRequestOperation.m */,
+				A419B0BE1905783900E60374 /* AFJSONRequestOperation.h */,
+				A419B0BF1905783900E60374 /* AFJSONRequestOperation.m */,
+				A419B0C01905783900E60374 /* AFNetworkActivityIndicatorManager.h */,
+				A419B0C11905783900E60374 /* AFNetworkActivityIndicatorManager.m */,
+				A419B0C21905783900E60374 /* AFNetworking.h */,
+				A419B0C31905783900E60374 /* AFPropertyListRequestOperation.h */,
+				A419B0C41905783900E60374 /* AFPropertyListRequestOperation.m */,
+				A419B0C51905783900E60374 /* AFURLConnectionOperation.h */,
+				A419B0C61905783900E60374 /* AFURLConnectionOperation.m */,
+				A419B0C71905783900E60374 /* AFXMLRequestOperation.h */,
+				A419B0C81905783900E60374 /* AFXMLRequestOperation.m */,
+				A419B0C91905783900E60374 /* UIImageView+AFNetworking.h */,
+				A419B0CA1905783900E60374 /* UIImageView+AFNetworking.m */,
+			);
+			path = AFNetworking;
+			sourceTree = "<group>";
+		};
+		A419B0D41905783E00E60374 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				A419B0B71905783900E60374 /* AFNetworking */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		A419B0D5190578BA00E60374 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A419B0D61905793200E60374 /* IQServerCommunication.h */,
+				A419B0D71905793200E60374 /* IQServerCommunication.m */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
+		A419B0DC1905842E00E60374 /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				A419B0E01905848900E60374 /* IQGameTableViewCell.h */,
+				A419B0E11905848900E60374 /* IQGameTableViewCell.m */,
+			);
+			name = CustomViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -231,6 +364,7 @@
 			files = (
 				A419B0851905553900E60374 /* InfoPlist.strings in Resources */,
 				A419B0901905553900E60374 /* Images.xcassets in Resources */,
+				A419B0AF1905586E00E60374 /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,9 +383,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A419B0CD1905783900E60374 /* AFImageRequestOperation.m in Sources */,
+				A419B0B31905599200E60374 /* IQLoginViewController.m in Sources */,
+				A419B0B6190559C400E60374 /* IQHomeViewController.m in Sources */,
+				A419B0E81905929B00E60374 /* IQGameViewController.m in Sources */,
+				A419B0D81905793200E60374 /* IQServerCommunication.m in Sources */,
+				A419B0D21905783900E60374 /* AFXMLRequestOperation.m in Sources */,
 				A419B08B1905553900E60374 /* IQAppDelegate.m in Sources */,
+				A419B0D31905783900E60374 /* UIImageView+AFNetworking.m in Sources */,
+				A419B0D11905783900E60374 /* AFURLConnectionOperation.m in Sources */,
+				A419B0E5190585B100E60374 /* IQGameLobyViewController.m in Sources */,
+				A419B0DB19057F5100E60374 /* IQGamesViewController.m in Sources */,
+				A419B0CF1905783900E60374 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				A419B08E1905553900E60374 /* IQ_fight.xcdatamodeld in Sources */,
+				A419B0E21905848900E60374 /* IQGameTableViewCell.m in Sources */,
+				A419B0CE1905783900E60374 /* AFJSONRequestOperation.m in Sources */,
 				A419B0871905553900E60374 /* main.m in Sources */,
+				A419B0D01905783900E60374 /* AFPropertyListRequestOperation.m in Sources */,
+				A419B0CB1905783900E60374 /* AFHTTPClient.m in Sources */,
+				A419B0CC1905783900E60374 /* AFHTTPRequestOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

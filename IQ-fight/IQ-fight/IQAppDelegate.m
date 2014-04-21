@@ -7,6 +7,7 @@
 //
 
 #import "IQAppDelegate.h"
+#import "IQServerCommunication.h"
 
 @implementation IQAppDelegate
 
@@ -19,7 +20,29 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
+    
+    //server communication send request islogged?
+    //is islogged
+    // root -> home
+    //else
+    // root -> login
+    //TODO: po kakvo da se proverqva za lognat user
+    
+    IQServerCommunication *sv = [[IQServerCommunication alloc] init];
+    [sv isLoggedWithCompletion:^(id result, NSError *error) {
+        if (result) {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+            UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
+            self.window.rootViewController = navViewController;
+        } else {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+            UIViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"loginRoot"];
+            self.window.rootViewController = loginViewController;
+        }
+    }];
+    
     [self.window makeKeyAndVisible];
+
     return YES;
 }
 
