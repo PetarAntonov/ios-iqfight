@@ -9,6 +9,7 @@
 #import "IQGamesViewController.h"
 #import "IQServerCommunication.h"
 #import "IQGameTableViewCell.h"
+#import "IQSettings.h"
 
 @interface IQGamesViewController ()
 
@@ -34,12 +35,12 @@
 {
     [super viewDidLoad];
     
-    //TODO: set the title
+    self.title = @"Games";
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+    [refreshControl addTarget:self action:@selector(updateTableView) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refreshControl];
 }
 
@@ -48,9 +49,6 @@
     [super viewWillAppear:animated];
     
     [self updateTableView];
-    
-    //TODO: timeintervala da bade raven na rezultata ot zaqvkata
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTableView) userInfo:nil repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -67,17 +65,24 @@
 
 #pragma mark - Table Delegate
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    //TODO: opravi boq na kletkite
-    return 1;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [[IQSettings sharedInstance].games count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     IQGameTableViewCell *cell = (IQGameTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"gameCell" forIndexPath:indexPath];
     
-   //TODO: set the cell views
+    cell.gameLabel.text = [IQSettings sharedInstance].games[indexPath.row][@"gameName"];
+    cell.playersToStartLabel.text = [IQSettings sharedInstance].games[indexPath.row][@"players_to_start"];
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self performSegueWithIdentifier:@"gameLobySegue" sender:nil];
 }
 
 #pragma mark - Private Methods
@@ -90,11 +95,16 @@
     
     [self.sv getGamesWithCompletion:^(id result, NSError *error) {
         if (result) {
+            //ako ima igri
+            [IQSettings sharedInstance].games = result[@"games"];
             
-            //TODO: zapazi ne6tata to zaqvkata
+//            if (self.timer == nil) {
+//                self.timer = [NSTimer scheduledTimerWithTimeInterval:result["refresh_interval"] target:self selector:@selector(updateTableView) userInfo:nil repeats:YES];
+//            }
             
             [self.tableView reloadData];
         } else {
+            //ako ima greshka
             if (self.timer != nil) {
                 [self.timer invalidate];
                 self.timer = nil;
@@ -104,13 +114,6 @@
             [alert show];
         }
     }];
-}
-
-- (void)refresh
-{
-    [self updateTableView];
-    
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTableView) userInfo:nil repeats:YES];
 }
 
 @end

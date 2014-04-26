@@ -13,4 +13,6 @@
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password withCompetionBlock:(void (^)(id result, NSError *error))completion;
 - (void)isLoggedWithCompletion:(void (^)(id result, NSError *error))completion;
 - (void)getGamesWithCompletion:(void (^)(id result, NSError *error))completion;
+- (void)openGameWithCompletion:(void (^)(id result, NSError *error))completion;
+
 @end

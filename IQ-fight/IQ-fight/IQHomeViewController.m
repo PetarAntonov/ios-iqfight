@@ -8,6 +8,7 @@
 
 #import "IQHomeViewController.h"
 #import "IQAppDelegate.h"
+#import "IQSettings.h"
 
 @interface IQHomeViewController ()
 
@@ -35,8 +36,8 @@
 {
     [super viewWillAppear:animated];
     
-    //send request for user
     //set title and other statistics on the UI
+    self.title = [IQSettings sharedInstance].currentUser.username;
 }
 
 - (void)didReceiveMemoryWarning
@@ -44,6 +45,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Action Methods
 
 - (IBAction)newGameButtonTapped:(id)sender
 {
@@ -53,6 +56,8 @@
 - (IBAction)logoutButtonTapped:(id)sender
 {
     //TODO: iztrii lognatiq user ako ima
+    
+    [[IQSettings sharedInstance].currentUser logout];
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
     UIViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"loginRoot"];

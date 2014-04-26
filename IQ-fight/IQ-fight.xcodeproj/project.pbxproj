@@ -39,6 +39,9 @@
 		A419B0E21905848900E60374 /* IQGameTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E11905848900E60374 /* IQGameTableViewCell.m */; };
 		A419B0E5190585B100E60374 /* IQGameLobyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E4190585B100E60374 /* IQGameLobyViewController.m */; };
 		A419B0E81905929B00E60374 /* IQGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E71905929B00E60374 /* IQGameViewController.m */; };
+		A46EE27F190C20C700671907 /* IQSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EE27E190C20C700671907 /* IQSettings.m */; };
+		A46EE282190C211700671907 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EE281190C211700671907 /* MBProgressHUD.m */; };
+		A46EE286190C221600671907 /* IQCurrentUser.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EE285190C221600671907 /* IQCurrentUser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +107,12 @@
 		A419B0E4190585B100E60374 /* IQGameLobyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGameLobyViewController.m; sourceTree = "<group>"; };
 		A419B0E61905929B00E60374 /* IQGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQGameViewController.h; sourceTree = "<group>"; };
 		A419B0E71905929B00E60374 /* IQGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGameViewController.m; sourceTree = "<group>"; };
+		A46EE27D190C20C700671907 /* IQSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQSettings.h; sourceTree = "<group>"; };
+		A46EE27E190C20C700671907 /* IQSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQSettings.m; sourceTree = "<group>"; };
+		A46EE280190C211700671907 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		A46EE281190C211700671907 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		A46EE284190C221600671907 /* IQCurrentUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQCurrentUser.h; sourceTree = "<group>"; };
+		A46EE285190C221600671907 /* IQCurrentUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQCurrentUser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +179,7 @@
 				A419B08A1905553900E60374 /* IQAppDelegate.m */,
 				A419B0D41905783E00E60374 /* Libraries */,
 				A419B0D5190578BA00E60374 /* Services */,
+				A46EE27C190C20A600671907 /* Utilities */,
 				A419B0AD1905584200E60374 /* Storyboards */,
 				A419B0B01905596300E60374 /* ViewControllers */,
 				A419B0DC1905842E00E60374 /* CustomViews */,
@@ -263,6 +273,7 @@
 		A419B0D41905783E00E60374 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				A46EE283190C212300671907 /* MBProgressHUD */,
 				A419B0B71905783900E60374 /* AFNetworking */,
 			);
 			name = Libraries;
@@ -284,6 +295,27 @@
 				A419B0E11905848900E60374 /* IQGameTableViewCell.m */,
 			);
 			name = CustomViews;
+			sourceTree = "<group>";
+		};
+		A46EE27C190C20A600671907 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A46EE27D190C20C700671907 /* IQSettings.h */,
+				A46EE27E190C20C700671907 /* IQSettings.m */,
+				A46EE284190C221600671907 /* IQCurrentUser.h */,
+				A46EE285190C221600671907 /* IQCurrentUser.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		A46EE283190C212300671907 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				A46EE280190C211700671907 /* MBProgressHUD.h */,
+				A46EE281190C211700671907 /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			path = AFNetworking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -385,6 +417,7 @@
 			files = (
 				A419B0CD1905783900E60374 /* AFImageRequestOperation.m in Sources */,
 				A419B0B31905599200E60374 /* IQLoginViewController.m in Sources */,
+				A46EE286190C221600671907 /* IQCurrentUser.m in Sources */,
 				A419B0B6190559C400E60374 /* IQHomeViewController.m in Sources */,
 				A419B0E81905929B00E60374 /* IQGameViewController.m in Sources */,
 				A419B0D81905793200E60374 /* IQServerCommunication.m in Sources */,
@@ -396,7 +429,9 @@
 				A419B0DB19057F5100E60374 /* IQGamesViewController.m in Sources */,
 				A419B0CF1905783900E60374 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				A419B08E1905553900E60374 /* IQ_fight.xcdatamodeld in Sources */,
+				A46EE282190C211700671907 /* MBProgressHUD.m in Sources */,
 				A419B0E21905848900E60374 /* IQGameTableViewCell.m in Sources */,
+				A46EE27F190C20C700671907 /* IQSettings.m in Sources */,
 				A419B0CE1905783900E60374 /* AFJSONRequestOperation.m in Sources */,
 				A419B0871905553900E60374 /* main.m in Sources */,
 				A419B0D01905783900E60374 /* AFPropertyListRequestOperation.m in Sources */,
@@ -598,6 +633,7 @@
 				A419B0A91905553900E60374 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A419B0AA1905553900E60374 /* Build configuration list for PBXNativeTarget "IQ-fightTests" */ = {
 			isa = XCConfigurationList;
@@ -606,6 +642,7 @@
 				A419B0AC1905553900E60374 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
