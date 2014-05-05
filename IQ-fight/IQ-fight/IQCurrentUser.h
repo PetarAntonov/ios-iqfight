@@ -11,7 +11,6 @@
 @interface IQCurrentUser : NSObject
 
 @property (nonatomic, strong) NSString *username;
-@property (nonatomic, strong) NSString *session_id;
 
 - (void)logout;
 

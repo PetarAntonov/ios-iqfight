@@ -9,8 +9,12 @@
 #import "IQHomeViewController.h"
 #import "IQAppDelegate.h"
 #import "IQSettings.h"
+#import "IQServerCommunication.h"
+#import "IQGamesViewController.h"
 
 @interface IQHomeViewController ()
+
+@property (nonatomic, strong) NSDictionary *games;
 
 @end
 
@@ -28,15 +32,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    //
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    //set title and other statistics on the UI
     self.title = [IQSettings sharedInstance].currentUser.username;
 }
 
@@ -44,6 +45,13 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"gamesSegue"]) {
+        ((IQGamesViewController *)segue.destinationViewController).games = self.games;
+    }
 }
 
 #pragma mark - Action Methods
@@ -54,9 +62,7 @@
 }
 
 - (IBAction)logoutButtonTapped:(id)sender
-{
-    //TODO: iztrii lognatiq user ako ima
-    
+{    
     [[IQSettings sharedInstance].currentUser logout];
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
@@ -67,7 +73,24 @@
 
 - (IBAction)joinGameButtonTapped:(id)sender
 {
-    [self performSegueWithIdentifier:@"gamesSegue" sender:nil];
+    [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+    IQServerCommunication *sc = [[IQServerCommunication alloc] init];
+    [sc getGamesWithCompletion:^(id result, NSError *error) {
+        if (result) {
+            self.games = result;
+            [self performSegueWithIdentifier:@"gamesSegue" sender:nil];
+        } else {
+            [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
+        }
+    }];
+}
+
+#pragma mark - Private Methods
+
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message cancelButton:(NSString *)button
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:button otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

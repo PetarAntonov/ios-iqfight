@@ -31,8 +31,6 @@
 	if (self = [super init]) {
         self.servicesURL = @"...";
         
-        self.games = @[];
-        
         self.currentUser = [[IQCurrentUser alloc] init];
     }
     

@@ -12,10 +12,15 @@
 
 @implementation IQServerCommunication
 
+- (void)isLoggedWithCompletion:(void (^)(id result, NSError *error))completion
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"is_logged"]];
+    
+    [self makeRequest:url httpMethod:@"GET" httpBody:nil completion:completion];
+}
+
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password withCompetionBlock:(void (^)(id result, NSError *error))completion
 {
-    //TODO: opravi url-a
-    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"login"]];
     
     NSDictionary *params = @{@"username": username,
@@ -29,29 +34,66 @@
     
 }
 
-- (void)isLoggedWithCompletion:(void (^)(id result, NSError *error))completion
-{    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"is_logged"]];
+- (void)createRegistrationWithUsername:(NSString *)username andPassword:(NSString *)password withCompetionBlock:(void (^)(id result, NSError *error))completion
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"register"]];
     
-    [self makeRequest:url httpMethod:@"GET" httpBody:nil completion:completion];
+    NSDictionary *params = @{@"username": username,
+                             @"password": password};
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:params
+                                                   options:0
+                                                     error:nil];
+    
+    [self makeRequest:url httpMethod:@"POST" httpBody:data completion:completion];
 }
 
 - (void)getGamesWithCompletion:(void (^)(id result, NSError *error))completion
 {
-    //TODO: opravi url-a
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @""]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"get_games"]];
     
     [self makeRequest:url httpMethod:@"GET" httpBody:nil completion:completion];
 }
 
-- (void)openGameWithCompletion:(void (^)(id result, NSError *error))completion
+- (void)openGame:(NSString *)gameID withCompletion:(void (^)(id result, NSError *error))completion
 {
-    //TODO: opravi url-a
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"open_game"]];
     
+    NSDictionary *params = @{@"game_id": gameID};
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:params
+                                                   options:0
+                                                     error:nil];
+    //POST ili GET trqbva da e
+    [self makeRequest:url httpMethod:@"POST" httpBody:data completion:completion];
+}
+
+- (void)refreshGame:(NSString *)gameID withCompletion:(void (^)(id result, NSError *error))completion
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"refresh_game"]];
+    
+    NSDictionary *params = @{@"game_id": gameID};
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:params
+                                                   options:0
+                                                     error:nil];
+    //POST ili GET trqbva da e
+    [self makeRequest:url httpMethod:@"POST" httpBody:data completion:completion];
+}
+
+- (void)playGameWithCompletion:(void (^)(id result, NSError *error))completion
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"play"]];
+    
+    [self makeRequest:url httpMethod:@"GET" httpBody:nil completion:completion];
+}
+
+- (void)answerQuestion:(NSString *)answerID withCompletion:(void (^)(id result, NSError *error))completion
+{
+    //TODO: orpavi url-a
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @""]];
     
-    NSDictionary *params = @{@"username": [IQSettings sharedInstance].currentUser.username};
+    NSDictionary *params = @{@"answer_id": answerID};
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:params
                                                    options:0
@@ -80,17 +122,14 @@
         id result = nil;
         if (responseObject) {
             result = [NSJSONSerialization JSONObjectWithData:responseObject options:kNilOptions error:nil];
-            
-            //TODO: obraboti rezultata
-            
             NSLog(@"result: %@", result);
-            if ([[result objectForKey:@"error"] isEqualToString:@""]) {
-                completion([result objectForKey:@"result"],nil);
+            if ([result[@"status"] isEqualToString:@"ok"]) {
+                completion(result,nil);
             } else {
-                completion(nil, [NSError errorWithDomain:@"ServerCommunication" code:500 userInfo:@{NSLocalizedDescriptionKey: [result objectForKey:@"error"]}]);
+                completion(nil, [NSError errorWithDomain:@"ServerCommunication" code:500 userInfo:@{NSLocalizedDescriptionKey: [result objectForKey:@"error_message"]}]);
             }
         } else {
-            completion(nil, [NSError errorWithDomain:@"ServerCommunication" code:500 userInfo:@{NSLocalizedDescriptionKey: @"Няма резултат от сървъра"}]);
+            completion(nil, [NSError errorWithDomain:@"ServerCommunication" code:500 userInfo:@{NSLocalizedDescriptionKey: @"Server error."}]);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         completion(nil, error);

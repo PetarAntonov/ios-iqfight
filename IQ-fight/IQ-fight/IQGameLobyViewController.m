@@ -9,6 +9,7 @@
 #import "IQGameLobyViewController.h"
 #import "IQServerCommunication.h"
 #import "IQSettings.h"
+#import "IQGameViewController.h"
 
 @interface IQGameLobyViewController ()
 
@@ -18,12 +19,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *questionsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timePerQuestionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeToStartLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameNameLabel;
 
 @property (nonatomic, strong) IQServerCommunication *sv;
-@property (nonatomic, strong) NSDictionary *gameInfo;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSTimer *timerToStart;
 @property (nonatomic, assign) NSInteger timeToStart;
+
+@property (nonatomic, strong) NSDictionary *play;
 
 @end
 
@@ -42,20 +45,14 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Game loby";
-
-    //TODO: setni UI
-    //zaqvka da updaitva igrata
-    //kogato ima igra4i se otvarq prozoreca za igra
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+    self.title = @"Prepare for game";
+    self.gameNameLabel.text = self.gameName;
     
-    self.timeToStart = 5;
+    self.timeToStartLabel.hidden = YES;
     
-    [self getGame];
+    [self updateUI];
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:([self.game[@"refresh_interval"] intValue] / 1000) target:self selector:@selector(refreshGame) userInfo:nil repeats:YES];
 }
 
 - (void)dealloc
@@ -72,26 +69,36 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)getGame
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"playGameSegue"]) {
+        ((IQGameViewController *)segue.destinationViewController).play = self.play;
+    }
+}
+
+//{
+//    'players_to_start':2,
+//    'users':['user1'],
+//    'refresh_interval':1000ms,
+//    'status':ok/error,
+//    'error_message':''
+//}
+
+#pragma mark - Private Methods
+
+- (void)refreshGame
 {
     if (self.sv == nil) {
         self.sv = [[IQServerCommunication alloc] init];
     }
     
-    [self.sv openGameWithCompletion:^(id result, NSError *error) {
-        //po kakvo shte se proverqva?
-        if (result) {
-            //ima rezultata
-            self.gameInfo = result;
-            self.player1Label.text = self.gameInfo[@"players"][0];
-            self.player2Label.text = self.gameInfo[@"players"][0];
-            self.player3Label.text = self.gameInfo[@"players"][0];
-            self.questionsLabel = self.gameInfo[@"questions"];
-            self.timePerQuestionLabel = self.gameInfo[@"time"];
-            self.timeToStartLabel.hidden = YES;
+    [self.sv openGame:self.gameID withCompletion:^(id result, NSError *error) {
+        if ([result[@"players_to_start"] intValue] >= 0 && [result[@"players_to_start"] intValue] < 3) {
+            self.game = result;
+            
+            [self updateUI];
             
             if ([result[@"players_to_start"] intValue] == 0) {
-                //ako ima 3ma igrachi i igrata trqbva da zapochne
                 self.timeToStartLabel.hidden = NO;
                 self.timeToStart = 5;
                 self.timeToStartLabel.text = [NSString stringWithFormat:@"Game will start in: %d", self.timeToStart];
@@ -100,20 +107,14 @@
                 self.timer = nil;
                 
                 self.timerToStart = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTimeLabel) userInfo:nil repeats:YES];
-                
-                
             } else {
-                //ako nqma dostatachno igrachi i trqbva da se chaka
-//                if (self.timer == nil) {
-//                    self.timer = [NSTimer scheduledTimerWithTimeInterval:result["refresh_interval"] target:self selector:@selector(getGame) userInfo:nil repeats:YES];
-//                }
-
+                //kakvo stava ako nqma greshka i imam igra4i izvan normata
             }
         } else {
-            //greshka ot servara
-            [[IQSettings sharedInstance] hideHud:self.view];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Server error" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert show];
+            [self.timer invalidate];
+            self.timer = nil;
+            
+            [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
         }
     }];
 }
@@ -123,8 +124,51 @@
     if (self.timeToStart > 0) {
         self.timeToStartLabel.text = [NSString stringWithFormat:@"Game will start in: %d", self.timeToStart - 1];
     } else {
-        [self performSegueWithIdentifier:@"playGameSegue" sender:nil];
+        if (self.sv == nil) {
+            self.sv = [[IQServerCommunication alloc] init];
+        }
+        
+        [self.sv playGameWithCompletion:^(id result, NSError *error) {
+            if (result) {
+                self.play = result;
+                [self performSegueWithIdentifier:@"playGameSegue" sender:nil];
+            } else {
+                [self.timerToStart invalidate];
+                self.timerToStart = nil;
+                
+                [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
+            }
+        }];
+        
+        
     }
+}
+
+- (void)updateUI
+{
+    if (![self.game[@"users"][0] isEqualToString:@""]) {
+        self.player1Label.text = self.game[@"users"][0];
+    } else {
+        self.player1Label.text = @"Waiting for player 1.";
+    }
+    
+    if (![self.game[@"users"][1] isEqualToString:@""]) {
+        self.player2Label.text = self.game[@"users"][1];
+    } else {
+        self.player2Label.text = @"Waiting for player 2.";
+    }
+    
+    if (![self.game[@"users"][2] isEqualToString:@""]) {
+        self.player3Label.text = self.game[@"users"][2];
+    } else {
+        self.player3Label.text = @"Waiting for player 3.";
+    }
+}
+
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message cancelButton:(NSString *)button
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:button otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

@@ -13,7 +13,6 @@
 
 @property (nonatomic, strong) NSString *servicesURL;
 @property (nonatomic, strong) IQCurrentUser *currentUser;
-@property (nonatomic, strong) NSArray *games;
 
 - (void)showHud:(NSString *)title onView:(UIView *)v;
 - (void)hideHud:(UIView *)v;

@@ -12,7 +12,6 @@
 
 - (void)logout
 {
-    self.session_id = @"";
     self.username = @"";
 }
 

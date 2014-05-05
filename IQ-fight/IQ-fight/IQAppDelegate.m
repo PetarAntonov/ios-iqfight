@@ -19,21 +19,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
-    
-    //TODO: po kakvo da se proverqva za lognat user
-    //kakvo vrashta zaqvkata isLogged?
     
     IQServerCommunication *sv = [[IQServerCommunication alloc] init];
     [sv isLoggedWithCompletion:^(id result, NSError *error) {
         if (result) {
-            [IQSettings sharedInstance].currentUser.username = result[@"username"];
-            [IQSettings sharedInstance].currentUser.session_id = result[@"session_id"];
-            
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
-            UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
-            self.window.rootViewController = navViewController;
+            if (![result[@"username"] isEqualToString:@""]) {
+                [IQSettings sharedInstance].currentUser.username = result[@"username"];
+                
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+                UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
+                self.window.rootViewController = navViewController;
+            }
         } else {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
             UIViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"loginRoot"];

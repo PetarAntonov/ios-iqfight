@@ -46,44 +46,38 @@
 {
     [self.view endEditing:YES];
     
-    NSString *username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSString *password = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
-    if (![username isEqualToString:@""] && ![password isEqualToString:@""]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-        });
-    }
-    
-    IQServerCommunication *sc = [[IQServerCommunication alloc] init];
-    [sc loginWithUsername:username andPassword:password withCompetionBlock:^(id result, NSError *error) {
-        if (!result[@"error"]) {
-            //ako nqma greshka
-            if ([result[@"logged"] boolValue]) {
-                //correct username and password
-                [IQSettings sharedInstance].currentUser.username = result[@"username"];
-                [IQSettings sharedInstance].currentUser.session_id = result[@"session_id"];
-                [IQSettings sharedInstance].games = result[@"games"];
-    
-                [[IQSettings sharedInstance] hideHud:self.view];
-                
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
-                UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
-                IQAppDelegate *delegate = [UIApplication sharedApplication].delegate;
-                delegate.window.rootViewController = navViewController;
+    if (![self.usernameTextField.text isEqualToString:@""] && ![self.passwordTextField.text isEqualToString:@""]) {
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+        IQServerCommunication *sc = [[IQServerCommunication alloc] init];
+        [sc loginWithUsername:self.usernameTextField.text andPassword:self.passwordTextField.text withCompetionBlock:^(id result, NSError *error) {
+            if (result) {
+                if (![result[@"username"] isEqualToString:@""]) {
+                    [IQSettings sharedInstance].currentUser.username = result[@"username"];
+                    
+                    [[IQSettings sharedInstance] hideHud:self.view];
+                    
+                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+                    UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
+                    IQAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+                    delegate.window.rootViewController = navViewController;
+                } else {
+                    //kakvo stava akop username-a e prazen?
+                    [[IQSettings sharedInstance] hideHud:self.view];
+                    [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
+                }
             } else {
-                //wrong username and password
                 [[IQSettings sharedInstance] hideHud:self.view];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Wrong username or password" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
+                [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
             }
-        } else {
-            //greshka ot servara
-            [[IQSettings sharedInstance] hideHud:self.view];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Server error" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert show];
-        }
-    }];
+        }];
+    } else {
+        [self showAlertWithTitle:@"Error" message:@"Empty fields." cancelButton:@"OK"];
+    }
+}
+
+- (IBAction)newRegistrationButtonTapped:(id)sender
+{
+    [self performSegueWithIdentifier:@"registrationSegue" sender:nil];
 }
 
 #pragma mark - TextField Delegate
@@ -93,6 +87,14 @@
     [textField resignFirstResponder];
     
     return YES;
+}
+
+#pragma mark - Private Methods
+
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message cancelButton:(NSString *)button
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:button otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

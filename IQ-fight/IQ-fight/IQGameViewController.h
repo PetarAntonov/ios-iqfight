@@ -10,4 +10,6 @@
 
 @interface IQGameViewController : UIViewController
 
+@property (nonatomic, strong) NSDictionary *play;
+
 @end
