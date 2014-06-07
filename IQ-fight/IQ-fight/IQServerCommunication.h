@@ -12,7 +12,7 @@
 
 - (void)isLoggedWithCompletion:(void (^)(id result, NSError *error))completion;
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password withCompetionBlock:(void (^)(id result, NSError *error))completion;
-- (void)createRegistrationWithUsername:(NSString *)username andPassword:(NSString *)password withCompetionBlock:(void (^)(id result, NSError *error))completion;
+- (void)createRegistrationWithUsername:(NSString *)username password:(NSString *)password andPassword1:(NSString *)password1 withCompetionBlock:(void (^)(id result, NSError *error))completion;
 - (void)getGamesWithCompletion:(void (^)(id result, NSError *error))completion;
 - (void)openGame:(NSString *)gameID withCompletion:(void (^)(id result, NSError *error))completion;
 - (void)refreshGame:(NSString *)gameID withCompletion:(void (^)(id result, NSError *error))completion;

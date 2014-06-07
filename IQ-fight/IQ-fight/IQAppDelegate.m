@@ -9,6 +9,11 @@
 #import "IQAppDelegate.h"
 #import "IQServerCommunication.h"
 #import "IQSettings.h"
+#import "DataService.h"
+
+@interface IQAppDelegate () <DataServiceDelegate>
+
+@end
 
 @implementation IQAppDelegate
 
@@ -21,26 +26,51 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     
-    IQServerCommunication *sv = [[IQServerCommunication alloc] init];
-    [sv isLoggedWithCompletion:^(id result, NSError *error) {
-        if (result) {
-            if (![result[@"username"] isEqualToString:@""]) {
-                [IQSettings sharedInstance].currentUser.username = result[@"username"];
-                
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
-                UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
-                self.window.rootViewController = navViewController;
-            }
-        } else {
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
-            UIViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"loginRoot"];
-            self.window.rootViewController = loginViewController;
-        }
-    }];
+    //DataService *dService = [IQSettings sharedInstance].dService;
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService isLogged];
     
     [self.window makeKeyAndVisible];
 
     return YES;
+}
+
+#pragma mark - Service delegates
+
+//expected request responce
+//{
+//    'username':'',
+//    'status':"ok/error",
+//    'error_message':''
+//}
+
+- (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+    UIViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"loginRoot"];
+    self.window.rootViewController = loginViewController;
+}
+
+- (void)dataServiceIsLoggedFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL logged = YES;
+    
+    if (j[@"username"] == nil || [j[@"username"] isEqualToString:@""] || ![j[@"status"] isEqualToString:@"ok"]) {
+        logged = NO;
+    }
+    
+    if (logged) {
+        [IQSettings sharedInstance].currentUser.username = j[@"username"];
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+        UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
+        self.window.rootViewController = navViewController;
+    } else {
+        [self dataServiceError:self errorMessage:@""];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

@@ -7,15 +7,19 @@
 //
 
 #import "IQLoginViewController.h"
-#import "IQAppDelegate.h"
-#import "IQServerCommunication.h"
 #import "IQSettings.h"
+#import "NSString+RegularExpressions.h"
+#import "DataService.h"
+#import "IQAppDelegate.h"
 
-@interface IQLoginViewController ()
+@interface IQLoginViewController () <DataServiceDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
+
+@property (nonatomic, strong) NSDictionary *test;
+
 @end
 
 @implementation IQLoginViewController
@@ -24,7 +28,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -32,12 +35,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if ([IQSettings sharedInstance].inDebug) {
+        self.usernameTextField.text = @"peshotest@abv.bg";
+        self.passwordTextField.text = @"123456";
+    }
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Action Methods
@@ -46,38 +58,81 @@
 {
     [self.view endEditing:YES];
     
-    if (![self.usernameTextField.text isEqualToString:@""] && ![self.passwordTextField.text isEqualToString:@""]) {
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-        IQServerCommunication *sc = [[IQServerCommunication alloc] init];
-        [sc loginWithUsername:self.usernameTextField.text andPassword:self.passwordTextField.text withCompetionBlock:^(id result, NSError *error) {
-            if (result) {
-                if (![result[@"username"] isEqualToString:@""]) {
-                    [IQSettings sharedInstance].currentUser.username = result[@"username"];
-                    
-                    [[IQSettings sharedInstance] hideHud:self.view];
-                    
-                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
-                    UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
-                    IQAppDelegate *delegate = [UIApplication sharedApplication].delegate;
-                    delegate.window.rootViewController = navViewController;
-                } else {
-                    //kakvo stava akop username-a e prazen?
-                    [[IQSettings sharedInstance] hideHud:self.view];
-                    [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-                }
-            } else {
-                [[IQSettings sharedInstance] hideHud:self.view];
-                [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-            }
-        }];
+    NSString *username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *password = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    if (![username isEqualToString:@""] && ![password isEqualToString:@""]) {
+        if ([self.usernameTextField.text isValidEmail]) {
+            [self performSelectorInBackground:@selector(doLogin) withObject:nil];
+        } else {
+            [[IQSettings sharedInstance] hideHud:self.view];
+            [self showAlertWithTitle:@"Error" message:@"Invalid email." cancelButton:@"OK"];
+        }
     } else {
         [self showAlertWithTitle:@"Error" message:@"Empty fields." cancelButton:@"OK"];
     }
 }
 
+- (void)doLogin
+{
+    NSString *username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *password = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+    });
+    
+    //DataService *dService = [IQSettings sharedInstance].dService;
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService loginWithUsername:username andPassword:password];
+}
+
 - (IBAction)newRegistrationButtonTapped:(id)sender
 {
     [self performSegueWithIdentifier:@"registrationSegue" sender:nil];
+}
+
+#pragma mark - Service delegates
+
+//expected request responce
+//{
+//    'username':'',
+//    'status':ok/error,
+//    'error_message':"Wrong user/Server error|Try later"
+//}
+
+- (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] hideHud:self.view];
+        [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
+    });
+}
+
+- (void)dataServiceLoginFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL loginSuccessfull = YES;
+    
+    if (j[@"username"] == nil || [j[@"username"] isEqualToString:@""] || ![j[@"status"] isEqualToString:@"ok"])
+        loginSuccessfull = NO;
+    
+    if (loginSuccessfull) {
+        [IQSettings sharedInstance].currentUser.username = j[@"username"];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
+            
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+            UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
+            IQAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+            delegate.window.rootViewController = navViewController;
+        });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
 }
 
 #pragma mark - TextField Delegate

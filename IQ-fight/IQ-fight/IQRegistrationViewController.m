@@ -8,15 +8,17 @@
 
 #import "IQRegistrationViewController.h"
 #import "IQAppDelegate.h"
-#import "IQServerCommunication.h"
 #import "IQSettings.h"
 #import "NSString+RegularExpressions.h"
+#import "DataService.h"
 
-@interface IQRegistrationViewController ()
+@interface IQRegistrationViewController () <DataServiceDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UITextField *repeatPasswordTextField;
+
+@property (nonatomic, strong) NSDictionary *test;
 
 @end
 
@@ -26,7 +28,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -36,10 +37,14 @@
     [super viewDidLoad];
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Action Methods
@@ -48,50 +53,88 @@
 {
     [self.view endEditing:YES];
     
-    if (![self.usernameTextField.text isEqualToString:@""] && ![self.passwordTextField.text isEqualToString:@""] && ![self.repeatPasswordTextField.text isEqualToString:@""]) {
+    NSString *username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *password = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *password1 = [self.repeatPasswordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    if (![username isEqualToString:@""] && ![password isEqualToString:@""] && ![password1 isEqualToString:@""]) {
      
-        if ([self.usernameTextField.text isValidEmail]) {
+        if ([username isValidEmail]) {
             
-            if ([self.passwordTextField.text isEqualToString:self.repeatPasswordTextField.text]) {
-                [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-                
-                IQServerCommunication *sc = [[IQServerCommunication alloc] init];
-                [sc createRegistrationWithUsername:self.usernameTextField.text andPassword:self.passwordTextField.text withCompetionBlock:^(id result, NSError *error) {
-                    
-                    if (result) {
-                        if (![result[@"username"] isEqualToString:@""]) {
-                            [IQSettings sharedInstance].currentUser.username = result[@"username"];
-                            
-                            [[IQSettings sharedInstance] hideHud:self.view];
-                            
-                            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
-                            UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
-                            IQAppDelegate *delegate = [UIApplication sharedApplication].delegate;
-                            delegate.window.rootViewController = navViewController;
-                        } else {
-                            //kakvo stava akop username-a e prazen?
-                            [[IQSettings sharedInstance] hideHud:self.view];
-                            [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-                        }
-                    } else {
-                        [[IQSettings sharedInstance] hideHud:self.view];
-                        [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-                    }
-                }];
+            if ([password isEqualToString:password1]) {
+                [self performSelectorInBackground:@selector(doRegister) withObject:nil];
             } else {
                 [self showAlertWithTitle:@"Error" message:@"Passwords doesn't match." cancelButton:@"OK"];
             }
         } else {
-            [self showAlertWithTitle:@"Error" message:@"Email isn't valid." cancelButton:@"OK"];
+            [self showAlertWithTitle:@"Error" message:@"Invalid email." cancelButton:@"OK"];
         }
     } else {
         [self showAlertWithTitle:@"Error" message:@"Empty fields." cancelButton:@"OK"];
     }
 }
 
+- (void)doRegister
+{
+    NSString *username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *password = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *password1 = [self.repeatPasswordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+    });
+    
+    //DataService *dService = [IQSettings sharedInstance].dService;
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService createRegistrationWithUsername:username password:password andPassword1:password1];
+}
+
 - (IBAction)cancelButtonTapped:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Service delegates
+
+//expected request responce
+//{
+//    'username':'',
+//    'status':ok/error,
+//    'error_messag'e:"Wrong user/Server error|Try later"
+//}
+
+- (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] hideHud:self.view];
+        [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
+    });
+}
+
+- (void)dataServiceRegistrationFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL registrationSuccessfull = YES;
+    
+    if (j[@"username"] == nil || [j[@"username"] isEqualToString:@""] || ![j[@"status"] isEqualToString:@"ok"])
+        registrationSuccessfull = NO;
+    
+    if (registrationSuccessfull) {
+        [IQSettings sharedInstance].currentUser.username = j[@"username"];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
+            
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+            UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
+            IQAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+            delegate.window.rootViewController = navViewController;
+        });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
 }
 
 #pragma mark - TextField Delegate

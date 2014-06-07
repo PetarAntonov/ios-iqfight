@@ -14,14 +14,14 @@
 
 - (void)isLoggedWithCompletion:(void (^)(id result, NSError *error))completion
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"is_logged"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/is_logged"]];
     
     [self makeRequest:url httpMethod:@"GET" httpBody:nil completion:completion];
 }
 
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password withCompetionBlock:(void (^)(id result, NSError *error))completion
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"login"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/login"]];
     
     NSDictionary *params = @{@"username": username,
                              @"password": password};
@@ -34,12 +34,13 @@
     
 }
 
-- (void)createRegistrationWithUsername:(NSString *)username andPassword:(NSString *)password withCompetionBlock:(void (^)(id result, NSError *error))completion
+- (void)createRegistrationWithUsername:(NSString *)username password:(NSString *)password andPassword1:(NSString *)password1 withCompetionBlock:(void (^)(id result, NSError *error))completion
 {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"register"]];
     
     NSDictionary *params = @{@"username": username,
-                             @"password": password};
+                             @"password": password,
+                             @"password1": password1};
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:params
                                                    options:0
@@ -50,14 +51,14 @@
 
 - (void)getGamesWithCompletion:(void (^)(id result, NSError *error))completion
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"get_games"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/get_games"]];
     
     [self makeRequest:url httpMethod:@"GET" httpBody:nil completion:completion];
 }
 
 - (void)openGame:(NSString *)gameID withCompletion:(void (^)(id result, NSError *error))completion
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"open_game"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/open_game"]];
     
     NSDictionary *params = @{@"game_id": gameID};
     
@@ -70,7 +71,7 @@
 
 - (void)refreshGame:(NSString *)gameID withCompletion:(void (^)(id result, NSError *error))completion
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"refresh_game"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/refresh_game"]];
     
     NSDictionary *params = @{@"game_id": gameID};
     
@@ -83,7 +84,7 @@
 
 - (void)playGameWithCompletion:(void (^)(id result, NSError *error))completion
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"play"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/play"]];
     
     [self makeRequest:url httpMethod:@"GET" httpBody:nil completion:completion];
 }
@@ -105,7 +106,7 @@
 - (void)makeRequest:(NSURL *)url httpMethod:(NSString *)httpMethod httpBody:(NSData *)httpBody completion:(void (^)(id result, NSError *error))completion
 {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    
+    NSLog(@"URL: %@", url.absoluteString);
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     [request setTimeoutInterval:60];

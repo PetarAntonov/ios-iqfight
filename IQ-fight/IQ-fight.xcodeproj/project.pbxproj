@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A4111D091920D740002B8E52 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = A4111D081920D740002B8E52 /* background.png */; };
 		A419B0791905553900E60374 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419B0781905553900E60374 /* Foundation.framework */; };
 		A419B07B1905553900E60374 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419B07A1905553900E60374 /* CoreGraphics.framework */; };
 		A419B07D1905553900E60374 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419B07C1905553900E60374 /* UIKit.framework */; };
@@ -39,6 +40,9 @@
 		A419B0E21905848900E60374 /* IQGameTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E11905848900E60374 /* IQGameTableViewCell.m */; };
 		A419B0E5190585B100E60374 /* IQGameLobyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E4190585B100E60374 /* IQGameLobyViewController.m */; };
 		A419B0E81905929B00E60374 /* IQGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E71905929B00E60374 /* IQGameViewController.m */; };
+		A4536283194300E80023B450 /* URLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = A4536282194300E80023B450 /* URLReader.m */; };
+		A45362861943023A0023B450 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A45362851943023A0023B450 /* Reachability.m */; };
+		A45362891943072B0023B450 /* DataService.m in Sources */ = {isa = PBXBuildFile; fileRef = A45362881943072B0023B450 /* DataService.m */; };
 		A46EE27F190C20C700671907 /* IQSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EE27E190C20C700671907 /* IQSettings.m */; };
 		A46EE282190C211700671907 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EE281190C211700671907 /* MBProgressHUD.m */; };
 		A46EE286190C221600671907 /* IQCurrentUser.m in Sources */ = {isa = PBXBuildFile; fileRef = A46EE285190C221600671907 /* IQCurrentUser.m */; };
@@ -58,6 +62,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A4111D081920D740002B8E52 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		A419B0751905553900E60374 /* IQ-fight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IQ-fight.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A419B0781905553900E60374 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A419B07A1905553900E60374 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -110,6 +115,12 @@
 		A419B0E4190585B100E60374 /* IQGameLobyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGameLobyViewController.m; sourceTree = "<group>"; };
 		A419B0E61905929B00E60374 /* IQGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQGameViewController.h; sourceTree = "<group>"; };
 		A419B0E71905929B00E60374 /* IQGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGameViewController.m; sourceTree = "<group>"; };
+		A4536281194300E80023B450 /* URLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLReader.h; sourceTree = "<group>"; };
+		A4536282194300E80023B450 /* URLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLReader.m; sourceTree = "<group>"; };
+		A45362841943023A0023B450 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		A45362851943023A0023B450 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		A45362871943072B0023B450 /* DataService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataService.h; sourceTree = "<group>"; };
+		A45362881943072B0023B450 /* DataService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataService.m; sourceTree = "<group>"; };
 		A46EE27D190C20C700671907 /* IQSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQSettings.h; sourceTree = "<group>"; };
 		A46EE27E190C20C700671907 /* IQSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQSettings.m; sourceTree = "<group>"; };
 		A46EE280190C211700671907 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -150,6 +161,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A4111D071920D72C002B8E52 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A4111D081920D740002B8E52 /* background.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		A419B06C1905553900E60374 = {
 			isa = PBXGroup;
 			children = (
@@ -192,6 +211,7 @@
 				A419B0AD1905584200E60374 /* Storyboards */,
 				A419B0B01905596300E60374 /* ViewControllers */,
 				A419B0DC1905842E00E60374 /* CustomViews */,
+				A4111D071920D72C002B8E52 /* Resources */,
 				A419B08F1905553900E60374 /* Images.xcassets */,
 				A419B08C1905553900E60374 /* IQ_fight.xcdatamodeld */,
 				A419B0811905553900E60374 /* Supporting Files */,
@@ -295,6 +315,12 @@
 		A419B0D5190578BA00E60374 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A45362841943023A0023B450 /* Reachability.h */,
+				A45362851943023A0023B450 /* Reachability.m */,
+				A4536281194300E80023B450 /* URLReader.h */,
+				A4536282194300E80023B450 /* URLReader.m */,
+				A45362871943072B0023B450 /* DataService.h */,
+				A45362881943072B0023B450 /* DataService.m */,
 				A419B0D61905793200E60374 /* IQServerCommunication.h */,
 				A419B0D71905793200E60374 /* IQServerCommunication.m */,
 			);
@@ -410,6 +436,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A419B0851905553900E60374 /* InfoPlist.strings in Resources */,
+				A4111D091920D740002B8E52 /* background.png in Resources */,
 				A419B0901905553900E60374 /* Images.xcassets in Resources */,
 				A419B0AF1905586E00E60374 /* Storyboard.storyboard in Resources */,
 			);
@@ -442,8 +469,10 @@
 				A419B08B1905553900E60374 /* IQAppDelegate.m in Sources */,
 				A419B0D31905783900E60374 /* UIImageView+AFNetworking.m in Sources */,
 				A419B0D11905783900E60374 /* AFURLConnectionOperation.m in Sources */,
+				A4536283194300E80023B450 /* URLReader.m in Sources */,
 				A419B0E5190585B100E60374 /* IQGameLobyViewController.m in Sources */,
 				A419B0DB19057F5100E60374 /* IQGamesViewController.m in Sources */,
+				A45362891943072B0023B450 /* DataService.m in Sources */,
 				A419B0CF1905783900E60374 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				A419B08E1905553900E60374 /* IQ_fight.xcdatamodeld in Sources */,
 				A46EE282190C211700671907 /* MBProgressHUD.m in Sources */,
@@ -454,6 +483,7 @@
 				A474BFDB1918283E00FDCE3C /* IQResultViewController.m in Sources */,
 				A419B0D01905783900E60374 /* AFPropertyListRequestOperation.m in Sources */,
 				A419B0CB1905783900E60374 /* AFHTTPClient.m in Sources */,
+				A45362861943023A0023B450 /* Reachability.m in Sources */,
 				A419B0CC1905783900E60374 /* AFHTTPRequestOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

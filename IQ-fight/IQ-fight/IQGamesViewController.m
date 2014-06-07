@@ -7,19 +7,16 @@
 //
 
 #import "IQGamesViewController.h"
-#import "IQServerCommunication.h"
 #import "IQGameTableViewCell.h"
 #import "IQSettings.h"
 #import "IQGameLobyViewController.h"
+#import "DataService.h"
 
-@interface IQGamesViewController ()
+@interface IQGamesViewController () <DataServiceDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
-@property (nonatomic, strong) IQServerCommunication *sv;
-@property (nonatomic, strong) NSTimer *timer;
-
-@property (nonatomic, strong) NSDictionary *game;
+@property (nonatomic, strong) NSMutableDictionary *game;
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *gameID;
 
@@ -31,7 +28,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -42,33 +38,33 @@
     
     self.title = @"Games";
     
+    self.gameID = @"";
+    self.gameName = @"";
+    self.game = [@{} mutableCopy];
+    
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self action:@selector(updateTableView) forControlEvents:UIControlEventValueChanged];
-    [self.tableView addSubview:refreshControl];
+//    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+//    [refreshControl addTarget:self action:@selector(refreshGames) forControlEvents:UIControlEventValueChanged];
+//    [self.tableView addSubview:refreshControl];
     
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:([self.games[@"refresh_interval"] intValue] / 1000) target:self selector:@selector(updateTableView) userInfo:nil repeats:YES];
+    [self performSelector:@selector(refreshGames) withObject:nil afterDelay:([self.games[@"refresh_interval"] intValue] / 1000)];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)dealloc
-{
-    [self.timer invalidate];
-    self.timer = nil;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"gameLobySegue"]) {
         ((IQGameLobyViewController *)segue.destinationViewController).game = self.game;
-        ((IQGameLobyViewController *)segue.destinationViewController).gameName = self.gameName;
-        ((IQGameLobyViewController *)segue.destinationViewController).gameID = self.gameID;
     }
 }
 
@@ -84,68 +80,153 @@
     IQGameTableViewCell *cell = (IQGameTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"gameCell" forIndexPath:indexPath];
     
     cell.gameLabel.text = self.games[@"games"][indexPath.row][@"name"];
-    cell.playersToStartLabel.text = self.games[@"games"][indexPath.row][@"players_to_start"];
+    cell.playersToStartLabel.text = [NSString stringWithFormat:@"Players to start: %@", self.games[@"games"][indexPath.row][@"players_to_start"]];
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    if (self.sv == nil) {
-        self.sv = [[IQServerCommunication alloc] init];
-    }
-    
-    [self.sv openGame:self.games[@"games"][indexPath.row][@"id"] withCompletion:^(id result, NSError *error) {
-        if ([result[@"players_to_start"] intValue] > 0) {
-            [self.sv refreshGame:self.games[@"games"][indexPath.row][@"id"] withCompletion:^(id result, NSError *error) {
-                if (result) {
-                    [[IQSettings sharedInstance] hideHud:self.view];
-                    self.game = result;
-                    self.gameName = self.games[@"games"][indexPath.row][@"name"];
-                    self.gameID = self.games[@"games"][indexPath.row][@"id"];
-                    [self performSegueWithIdentifier:@"gameLobySegue" sender:nil];
-                } else {
-                    [[IQSettings sharedInstance] hideHud:self.view];
-                    [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-                }
-            }];
-        } else {
-            [[IQSettings sharedInstance] hideHud:self.view];
-            [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-        }
-    }];
-    
-    [self performSegueWithIdentifier:@"gameLobySegue" sender:nil];
+    self.gameID = self.games[@"games"][indexPath.row][@"id"];
+    self.gameName = self.games[@"games"][indexPath.row][@"name"];
+    [self performSelectorInBackground:@selector(doOpenGame) withObject:nil];
 }
 
 #pragma mark - Private Methods
 
-- (void)updateTableView
+- (void)refreshGames
 {
-    if (self.sv == nil) {
-        self.sv = [[IQServerCommunication alloc] init];
-    }
+    [self performSelectorInBackground:@selector(doGetGames) withObject:nil];
+}
+
+- (void)doGetGames
+{
+    //DataService *dService = [IQSettings sharedInstance].dService;
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService getGames];
+}
+
+- (void)doOpenGame
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+    });
     
-    if (self.timer == nil) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:([self.games[@"refresh_interval"] intValue] / 1000) target:self selector:@selector(updateTableView) userInfo:nil repeats:YES];
-    }
+    //DataService *dService = [IQSettings sharedInstance].dService;
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService openGame:self.gameID];
+}
+
+#pragma mark - Service delegates
+
+- (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
+    });
+}
+
+//expected request responce
+//{
+//    'games':
+//        [ {'id':8,
+//            'name': Ebane,
+//            'players_to_start':2}
+//         ],
+//    'refresh_interval':1000ms,
+//    'status':"ok/error",
+//    'error_message':''
+//}
+
+- (void)dataServiceGetGamesFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
     
-    IQServerCommunication *sc = [[IQServerCommunication alloc] init];
-    [sc getGamesWithCompletion:^(id result, NSError *error) {
-        if (result) {
-            self.games = result;
+    BOOL getGamesSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        getGamesSuccessfull = NO;
+    
+    if (getGamesSuccessfull) {
+        self.games = j;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
             
             [self.tableView reloadData];
-        } else {
-            if (self.timer != nil) {
-                [self.timer invalidate];
-                self.timer = nil;
+            if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGamesViewController class]]) {
+                [self performSelector:@selector(refreshGames) withObject:nil afterDelay:([self.games[@"refresh_interval"] intValue] / 1000)];
             }
+        });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
+}
+
+//expected request responce
+//{
+//    'players_to_start':2,
+//    status:ok/error,
+//    'error_message':''
+//}
+
+- (void)dataServiceOpenGameFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL openGameSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        openGameSuccessfull = NO;
+    
+    if (openGameSuccessfull) {
+        //DataService *dService = [IQSettings sharedInstance].dService;
+        DataService *dService = [[DataService alloc] init];
+        dService.delegate = self;
+        [dService refreshGame:self.gameID];
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
+}
+
+//expected request responce
+//{
+//    'players_to_start':1,
+//    'users':['user1',
+//             'user2'
+//             ],
+//    'refresh_interval':1000ms,
+//    'status':'ok/error',
+//    'error_message':''
+//}
+
+- (void)dataServiceRefreshGameFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL refreshGameSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        refreshGameSuccessfull = NO;
+    
+    if (refreshGameSuccessfull) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
             
-            [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-        }
-    }];
+            self.game = [j mutableCopy];
+            [self.game setValue:self.gameID forKey:@"id"];
+            [self.game setValue:self.gameName forKey:@"name"];
+            
+            [self performSegueWithIdentifier:@"gameLobySegue" sender:nil];
+        });
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
+        });
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
 }
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message cancelButton:(NSString *)button

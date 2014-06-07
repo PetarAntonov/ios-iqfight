@@ -10,8 +10,6 @@
 
 @interface IQGameLobyViewController : UIViewController
 
-@property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSDictionary *game;
-@property (nonatomic, strong) NSString *gameID;
 
 @end

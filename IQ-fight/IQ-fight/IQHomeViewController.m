@@ -9,10 +9,10 @@
 #import "IQHomeViewController.h"
 #import "IQAppDelegate.h"
 #import "IQSettings.h"
-#import "IQServerCommunication.h"
+#import "DataService.h"
 #import "IQGamesViewController.h"
 
-@interface IQHomeViewController ()
+@interface IQHomeViewController () <DataServiceDelegate>
 
 @property (nonatomic, strong) NSDictionary *games;
 
@@ -24,7 +24,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -41,10 +40,14 @@
     self.title = [IQSettings sharedInstance].currentUser.username;
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -62,7 +65,8 @@
 }
 
 - (IBAction)logoutButtonTapped:(id)sender
-{    
+{
+    //TODO: iztrii tuka i cookite ili kvoto 6te da e tam
     [[IQSettings sharedInstance].currentUser logout];
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
@@ -73,16 +77,63 @@
 
 - (IBAction)joinGameButtonTapped:(id)sender
 {
-    [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    IQServerCommunication *sc = [[IQServerCommunication alloc] init];
-    [sc getGamesWithCompletion:^(id result, NSError *error) {
-        if (result) {
-            self.games = result;
+    [self performSelectorInBackground:@selector(doGetGames) withObject:nil];
+}
+
+- (void)doGetGames
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+    });
+    
+    //DataService *dService = [IQSettings sharedInstance].dService;
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService getGames];
+}
+
+#pragma mark - Service delegates
+
+//expected request responce
+//{
+//    'games':
+//        [ {'id':8,
+//            'name': Ebane,
+//            'players_to_start':2}
+//         ],
+//    'refresh_interval':1000ms,
+//    'status':"ok/error",
+//    'error_message':''
+//}
+
+- (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] hideHud:self.view];
+        [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
+    });
+}
+
+- (void)dataServiceGetGamesFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL getGamesSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        getGamesSuccessfull = NO;
+    
+    if (getGamesSuccessfull) {
+        self.games = j;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
+            
             [self performSegueWithIdentifier:@"gamesSegue" sender:nil];
-        } else {
-            [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-        }
-    }];
+        });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
 }
 
 #pragma mark - Private Methods
