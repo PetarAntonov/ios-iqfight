@@ -21,6 +21,9 @@
 - (void)dataServiceRefreshGameFinished:(id)sender withData:(NSData *)data;
 - (void)dataServicePlayGameFinished:(id)sender withData:(NSData *)data;
 - (void)dataServiceAnswerQuestionFinished:(id)sender withData:(NSData *)data;
+- (void)dataServiceNewGameFinished:(id)sender withData:(NSData *)data;
+- (void)dataServiceQuitGame:(id)sender withData:(NSData *)data;
+- (void)dataServiceLogoutFinished:(id)sender withData:(NSData *)data;
 
 @end
 
@@ -36,5 +39,8 @@
 - (void)refreshGame:(NSString *)gameID;
 - (void)playGame;
 - (void)answerQuestion:(NSString *)answerID;
+- (void)newGameWithName:(NSString *)name;
+- (void)quitGame;
+- (void)logout;
 
 @end

@@ -21,6 +21,9 @@ typedef enum WSOperation {
     WSOperationsRefreshGame,
     WSOperationsPlayGame,
     WSOperationsAnswerQuestion,
+    WSOperationsNewGame,
+    WSOperationQuit,
+    WSOperationLogout
 } WSOperation;
 
 @interface IQSettings : NSObject

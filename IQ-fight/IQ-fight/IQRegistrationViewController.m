@@ -37,11 +37,6 @@
     [super viewDidLoad];
 }
 
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -62,7 +57,9 @@
         if ([username isValidEmail]) {
             
             if ([password isEqualToString:password1]) {
-                [self performSelectorInBackground:@selector(doRegister) withObject:nil];
+                [self performSelectorInBackground:@selector(doRegister:) withObject:@{@"username":username,
+                                                                                      @"password":password,
+                                                                                      @"password1":password1}];
             } else {
                 [self showAlertWithTitle:@"Error" message:@"Passwords doesn't match." cancelButton:@"OK"];
             }
@@ -74,12 +71,8 @@
     }
 }
 
-- (void)doRegister
+- (void)doRegister:(NSDictionary *)dic
 {
-    NSString *username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSString *password = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSString *password1 = [self.repeatPasswordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         [[IQSettings sharedInstance] showHud:@"" onView:self.view];
     });
@@ -87,7 +80,7 @@
     //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
-    [dService createRegistrationWithUsername:username password:password andPassword1:password1];
+    [dService createRegistrationWithUsername:dic[@"username"] password:dic[@"password"] andPassword1:dic[@"password1"]];
 }
 
 - (IBAction)cancelButtonTapped:(id)sender

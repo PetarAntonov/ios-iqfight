@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSMutableDictionary *game;
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *gameID;
+@property (nonatomic, assign) BOOL canRefresh;
 
 @end
 
@@ -38,6 +39,7 @@
     
     self.title = @"Games";
     
+    self.canRefresh = YES;
     self.gameID = @"";
     self.gameName = @"";
     self.game = [@{} mutableCopy];
@@ -47,13 +49,13 @@
 //    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
 //    [refreshControl addTarget:self action:@selector(refreshGames) forControlEvents:UIControlEventValueChanged];
 //    [self.tableView addSubview:refreshControl];
-    
-    [self performSelector:@selector(refreshGames) withObject:nil afterDelay:([self.games[@"refresh_interval"] intValue] / 1000)];
 }
 
--(void)viewWillDisappear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
+    [super viewWillAppear:animated];
+    
+    [self performSelector:@selector(refreshGames) withObject:nil afterDelay:([self.games[@"refresh_interval"] intValue] / 1000)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,9 +89,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    self.canRefresh = NO;
     self.gameID = self.games[@"games"][indexPath.row][@"id"];
     self.gameName = self.games[@"games"][indexPath.row][@"name"];
-    [self performSelectorInBackground:@selector(doOpenGame) withObject:nil];
+    [self performSelectorInBackground:@selector(doQuitGame) withObject:nil];
 }
 
 #pragma mark - Private Methods
@@ -107,7 +111,7 @@
     [dService getGames];
 }
 
-- (void)doOpenGame
+- (void)doQuitGame
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [[IQSettings sharedInstance] showHud:@"" onView:self.view];
@@ -116,7 +120,7 @@
     //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
-    [dService openGame:self.gameID];
+    [dService quitGame];
 }
 
 #pragma mark - Service delegates
@@ -160,6 +164,30 @@
                 [self performSelector:@selector(refreshGames) withObject:nil afterDelay:([self.games[@"refresh_interval"] intValue] / 1000)];
             }
         });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
+}
+//expected request responce
+//{
+//    'status': ok,
+//    'error_message':''
+//}
+
+- (void)dataServiceQuitGame:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL quitGameSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        quitGameSuccessfull = NO;
+    
+    if (quitGameSuccessfull) {
+        //DataService *dService = [IQSettings sharedInstance].dService;
+        DataService *dService = [[DataService alloc] init];
+        dService.delegate = self;
+        [dService openGame:self.gameID];
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }

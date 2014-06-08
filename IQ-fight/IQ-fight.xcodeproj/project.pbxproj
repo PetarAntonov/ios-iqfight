@@ -49,6 +49,7 @@
 		A474BFD51917C9D200FDCE3C /* IQRegistrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A474BFD41917C9D200FDCE3C /* IQRegistrationViewController.m */; };
 		A474BFD81917D00800FDCE3C /* NSString+RegularExpressions.m in Sources */ = {isa = PBXBuildFile; fileRef = A474BFD71917D00800FDCE3C /* NSString+RegularExpressions.m */; };
 		A474BFDB1918283E00FDCE3C /* IQResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A474BFDA1918283E00FDCE3C /* IQResultViewController.m */; };
+		A4BE470C19446510008EC970 /* IQNewGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BE470B19446510008EC970 /* IQNewGameViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +134,8 @@
 		A474BFD71917D00800FDCE3C /* NSString+RegularExpressions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RegularExpressions.m"; sourceTree = "<group>"; };
 		A474BFD91918283E00FDCE3C /* IQResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQResultViewController.h; sourceTree = "<group>"; };
 		A474BFDA1918283E00FDCE3C /* IQResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQResultViewController.m; sourceTree = "<group>"; };
+		A4BE470A19446510008EC970 /* IQNewGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQNewGameViewController.h; sourceTree = "<group>"; };
+		A4BE470B19446510008EC970 /* IQNewGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQNewGameViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,6 +270,8 @@
 				A419B0B5190559C400E60374 /* IQHomeViewController.m */,
 				A419B0D919057F5100E60374 /* IQGamesViewController.h */,
 				A419B0DA19057F5100E60374 /* IQGamesViewController.m */,
+				A4BE470A19446510008EC970 /* IQNewGameViewController.h */,
+				A4BE470B19446510008EC970 /* IQNewGameViewController.m */,
 				A419B0E3190585B100E60374 /* IQGameLobyViewController.h */,
 				A419B0E4190585B100E60374 /* IQGameLobyViewController.m */,
 				A419B0E61905929B00E60374 /* IQGameViewController.h */,
@@ -473,6 +478,7 @@
 				A419B0E5190585B100E60374 /* IQGameLobyViewController.m in Sources */,
 				A419B0DB19057F5100E60374 /* IQGamesViewController.m in Sources */,
 				A45362891943072B0023B450 /* DataService.m in Sources */,
+				A4BE470C19446510008EC970 /* IQNewGameViewController.m in Sources */,
 				A419B0CF1905783900E60374 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				A419B08E1905553900E60374 /* IQ_fight.xcdatamodeld in Sources */,
 				A46EE282190C211700671907 /* MBProgressHUD.m in Sources */,

@@ -55,7 +55,7 @@
 #else
         self.inDebug = NO;`
 #endif
-        self.servicesURL = @"http://iqfight.empters.com/";
+        self.servicesURL = @"http://iqfight.empters.com";
         
         self.currentUser = [[IQCurrentUser alloc] init];
         self.dService = [[DataService alloc] init];

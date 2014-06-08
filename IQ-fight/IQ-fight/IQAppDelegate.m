@@ -26,6 +26,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     
+    [self setCookie];
+    
     //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
@@ -34,6 +36,17 @@
     [self.window makeKeyAndVisible];
 
     return YES;
+}
+
+- (void)setCookie
+{
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain];
+    
+    NSDictionary* cookieDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:@"sessionid"];
+    if (cookieDictionary) {
+        NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieDictionary];
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookies:@[cookie] forURL:[NSURL URLWithString:@"http://iqfight.empters.com"] mainDocumentURL:[NSURL URLWithString:@"http://iqfight.empters.com"]];
+    }
 }
 
 #pragma mark - Service delegates

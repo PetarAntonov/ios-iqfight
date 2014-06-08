@@ -42,11 +42,6 @@
     }
 }
 
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -63,9 +58,9 @@
     
     if (![username isEqualToString:@""] && ![password isEqualToString:@""]) {
         if ([self.usernameTextField.text isValidEmail]) {
-            [self performSelectorInBackground:@selector(doLogin) withObject:nil];
+            [self performSelectorInBackground:@selector(doLogin:) withObject:@{@"username":username,
+                                                                               @"password":password}];
         } else {
-            [[IQSettings sharedInstance] hideHud:self.view];
             [self showAlertWithTitle:@"Error" message:@"Invalid email." cancelButton:@"OK"];
         }
     } else {
@@ -73,11 +68,8 @@
     }
 }
 
-- (void)doLogin
+- (void)doLogin:(NSDictionary *)dic
 {
-    NSString *username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSString *password = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         [[IQSettings sharedInstance] showHud:@"" onView:self.view];
     });
@@ -85,7 +77,7 @@
     //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
-    [dService loginWithUsername:username andPassword:password];
+    [dService loginWithUsername:dic[@"username"] andPassword:dic[@"password"]];
 }
 
 - (IBAction)newRegistrationButtonTapped:(id)sender

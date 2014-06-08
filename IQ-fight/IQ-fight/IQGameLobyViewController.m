@@ -58,7 +58,16 @@
     
     [self updateUI];
     
-    [self performSelector:@selector(refreshGame) withObject:nil afterDelay:([self.game[@"refresh_interval"] intValue] / 1000)];
+//    [self performSelector:@selector(refreshGame) withObject:nil afterDelay:([self.game[@"refresh_interval"] intValue] / 1000)];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    if (![self.navigationController.viewControllers containsObject:self]) {
+        [self performSelectorInBackground:@selector(doQuitGame) withObject:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -88,10 +97,22 @@
 
 - (void)startGame
 {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+    });
+    
     //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService playGame];
+}
+
+- (void)doQuitGame
+{
+    //DataService *dService = [IQSettings sharedInstance].dService;
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService quitGame];
 }
 
 #pragma mark - Service delegates
@@ -110,6 +131,8 @@
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] hideHud:self.view];
+        
         [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
     });
 }
@@ -128,7 +151,7 @@
             self.game = j;
             [self updateUI];
             
-            if ([j[@"players_to_start"] intValue] != 0) {
+            if ([j[@"players_to_start"] intValue] == 0) {
                 self.timeToStartLabel.hidden = NO;
                 self.timeToStart = 5;
                 self.timeToStartLabel.text = [NSString stringWithFormat:@"Game will start in: %d", self.timeToStart];
@@ -179,12 +202,19 @@
     
     if (playGameSuccessfull) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
             self.play = j;
-            [self performSegueWithIdentifier:@"playGameSegue" sender:nil];
+            [[IQSettings sharedInstance] LogThis:[NSString stringWithFormat:@"%@", self.play ]];
+         //   [self performSegueWithIdentifier:@"playGameSegue" sender:nil];
         });
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
+}
+
+- (void)dataServiceQuitGame:(id)sender withData:(NSData *)data
+{
+
 }
 
 #pragma mark - Private Methods

@@ -53,11 +53,11 @@
 //POST REQUEST
 //    NSDictionary *params = @{@"username": username,
 //                             @"password": password};
-    
+//
 //    NSData *postData = [[IQSettings sharedInstance] dictToJSONData:params];
 //    NSData *postData = [[NSString stringWithFormat:@"username=%@&password=%@", username, password] dataUsingEncoding:NSUTF8StringEncoding];
 //    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/login"];
-    
+//
 //    [self.urlReader getFromURL:self.lastURL postData:postData postMethod:@"POST"];
 }
 
@@ -180,6 +180,44 @@
 //    [self.urlReader getFromURL:self.lastURL postData:postData postMethod:@"POST"];
 }
 
+- (void)newGameWithName:(NSString *)name
+{
+    self.OperationID = WSOperationsNewGame;
+    
+    if (self.urlReader == nil)
+        self.urlReader = [[URLReader alloc] init];
+    [self.urlReader setDelegate:self];
+    
+    self.lastURL = [NSString stringWithFormat:@"%@%@?name=%@", [IQSettings sharedInstance].servicesURL, @"/new_game", name];
+    
+    [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
+}
+
+- (void)quitGame
+{
+    self.OperationID = WSOperationQuit;
+    
+    if (self.urlReader == nil)
+        self.urlReader = [[URLReader alloc] init];
+    [self.urlReader setDelegate:self];
+    
+    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/quit"];
+    
+    [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
+}
+
+- (void)logout
+{
+    self.OperationID = WSOperationLogout;
+    
+    if (self.urlReader == nil)
+        self.urlReader = [[URLReader alloc] init];
+    [self.urlReader setDelegate:self];
+    
+    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/logout"];
+    
+    [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
+}
 
 #pragma mark - URLReader delegates
 
@@ -221,6 +259,18 @@
         case WSOperationsAnswerQuestion:
             if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceAnswerQuestionFinished:withData:)])
                 [self.delegate dataServiceAnswerQuestionFinished:self withData:resultData];
+            break;
+        case WSOperationsNewGame:
+            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceNewGameFinished:withData:)])
+                [self.delegate dataServiceNewGameFinished:self withData:resultData];
+            break;
+        case WSOperationQuit:
+            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceQuitGame:withData:)])
+                [self.delegate dataServiceQuitGame:self withData:resultData];
+            break;
+        case WSOperationLogout:
+            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceLogoutFinished:withData:)])
+                [self.delegate dataServiceLogoutFinished:self withData:resultData];
             break;
         default:
             break;
