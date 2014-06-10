@@ -31,10 +31,6 @@ typedef enum WSOperation {
 @property (nonatomic,assign) BOOL inDebug;
 @property (nonatomic, strong) NSString *servicesURL;
 @property (nonatomic, strong) IQCurrentUser *currentUser;
-@property (nonatomic, strong) DataService *dService;
-@property (nonatomic, strong) NSMutableURLRequest *request;
-@property (nonatomic, strong) URLReader *urlReader;
-
 + (IQSettings *)sharedInstance;
 
 - (void)LogThis:(NSString *)log, ...;

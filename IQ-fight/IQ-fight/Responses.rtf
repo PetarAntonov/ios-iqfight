@@ -1,0 +1,157 @@
+{\rtf1\ansi\ansicpg1251\cocoartf1265\cocoasubrtf200
+{\fonttbl\f0\fnil\fcharset0 Menlo-Bold;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red196\green26\blue22;\red0\green116\blue0;}
+\margl1440\margr1440\vieww17200\viewh13520\viewkind0
+\deftab529
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 \CocoaLigature0 /is_logged
+\fs24 \
+\pard\tx529\pardeftab529\pardirnatural
+
+\f1\b0\fs22 \cf3 //expected request responce\cf0 \
+\cf3 //\{\cf0 \
+\cf3 //    'username':'',\cf0 \
+\cf3 //    'status':"ok/error",\cf0 \
+\cf3 //    'error_message':''\cf0 \
+\cf3 //\}\
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 /login
+\f1\b0\fs22 \cf3 \
+//expected request responce\cf0 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf3 //\{\cf0 \
+\cf3 //    'username':'',\cf0 \
+\cf3 //    'status':ok/error,\cf0 \
+\cf3 //    'error_message':"Wrong user/Server error|Try later"\cf0 \
+\cf3 //\}\
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 /register
+\f1\b0\fs22 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf3 //expected request responce\cf0 \
+\cf3 //\{\cf0 \
+\cf3 //    'username':'',\cf0 \
+\cf3 //    'status':ok/error,\cf0 \
+\cf3 //    'error_messag'e:"Wrong user/Server error|Try later"\cf0 \
+\cf3 //\}\
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 /get_games
+\f1\b0\fs22 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf3 //expected request responce\cf0 \
+\cf3 //\{\cf0 \
+\cf3 //    'games':\cf0 \
+\cf3 //        [ \{'id':8,\cf0 \
+\cf3 //            'name': Ebane,\cf0 \
+\cf3 //            'players_to_start':2\}\cf0 \
+\cf3 //         ],\cf0 \
+\cf3 //    'refresh_interval':1000ms,\cf0 \
+\cf3 //    'status':"ok/error",\cf0 \
+\cf3 //    'error_message':''\cf0 \
+\cf3 //\}\
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 /open_game
+\f1\b0\fs22 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf3 //expected request responce\cf0 \
+\cf3 //\{\cf0 \
+\cf3 //    'players_to_start':2,\cf0 \
+\cf3 //    status:ok/error,\cf0 \
+\cf3 //    'error_message':''\cf0 \
+\cf3 //\}\
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 /refresh_game
+\f1\b0\fs22 \cf0 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf3 //expected request responce\cf0 \
+\cf3 //\{\cf0 \
+\cf3 //    'players_to_start':1,\cf0 \
+\cf3 //    'users':['user1',\cf0 \
+\cf3 //             'user2'\cf0 \
+\cf3 //             ],\cf0 \
+\cf3 //    'refresh_interval':1000ms,\cf0 \
+\cf3 //    'status':'ok/error',\cf0 \
+\cf3 //    'error_message':''\cf0 \
+\cf3 //\}\
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 /play
+\f1\b0\fs22 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf3 //expected request responce\cf0 \
+\cf3 //\{\cf0 \
+\cf3 //    'refresh_interval':1000,\cf0 \
+\cf3 //    'question':[],\cf0 \
+\cf3 //    'answers':[],\cf0 \
+\cf3 //    'users':['user1','user2'],\cf0 \
+\cf3 //    'remaing_time':53*1000,\cf0 \
+\cf3 //    'answered_user':'',\cf0 \
+\cf3 //    'status':ok/error,\cf0 \
+\cf3 //    'error_message':''\cf0 \
+\cf3 //\}\cf0 \
+\
+\
+\cf3 //'answers':[\{\cf0 \
+\cf3 //          'answer':'TEj',\cf0 \
+\cf3 //          'id':90\cf0 \
+\cf3 //          \}]\cf0 \
+\
+\cf3 //'question':\{\cf0 \
+\cf3 //    'question':'Tuk e tekst',\cf0 \
+\cf3 //    'explanation':'Pak tekst',\cf0 \
+\cf3 //    'picture':'Tuk e tekst NO s URL do snimkata'\cf0 \
+\cf3 //\}\cf2 \
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 /new_game
+\f1\b0\fs22 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf3 //expected request responce\cf0 \
+\cf3 //\{\cf0 \
+\cf3 //    'name':'...',\cf0 \
+\cf3 //    'id':'' ,\cf0 \
+\cf3 //    'status:ok/error',\cf0 \
+\cf3 //    'error_message':''\cf0 \
+\cf3 //\}\cf2 \
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 /quit
+\f1\b0\fs22 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf3 //expected request responce\cf0 \
+\cf3 //\{\cf0 \
+\cf3 //    'status': ok,\cf0 \
+\cf3 //    'error_message':''\cf0 \
+\cf3 //\}\
+\
+\pard\tx529\pardeftab529\pardirnatural
+
+\f0\b\fs28 \cf2 /logout
+\f1\b0\fs22 \cf3 \
+//expected request responce\cf0 \
+\pard\tx529\pardeftab529\pardirnatural
+\cf3 //\{\cf0 \
+\cf3 //    'status': ok,\cf0 \
+\cf3 //    'error_message':''\cf0 \
+\cf3 //\}\
+\
+\pard\tx529\pardeftab529\pardirnatural
+\cf2 /answer\cf3 \
+\
+\
+\
+}

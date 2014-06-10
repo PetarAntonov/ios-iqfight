@@ -58,9 +58,6 @@
         self.servicesURL = @"http://iqfight.empters.com";
         
         self.currentUser = [[IQCurrentUser alloc] init];
-        self.dService = [[DataService alloc] init];
-        self.request = [[NSMutableURLRequest alloc] init];
-        self.urlReader = [[URLReader alloc] init];
     }
     
     return self;

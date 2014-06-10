@@ -23,7 +23,6 @@
     [[IQSettings sharedInstance] LogThis:@"getFromURL URL = %@", URL];
 	
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-   // NSMutableURLRequest *request = [IQSettings sharedInstance].request;
     request.HTTPShouldHandleCookies = YES;
     request.HTTPShouldUsePipelining = YES;
 	[request setURL:[NSURL URLWithString:URL]];

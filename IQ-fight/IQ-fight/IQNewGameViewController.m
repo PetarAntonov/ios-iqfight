@@ -71,21 +71,12 @@
         [[IQSettings sharedInstance] showHud:@"" onView:self.view];
     });
     
-    //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService newGameWithName:dic[@"name"]];
 }
 
 #pragma mark - Service delegates
-
-//expected request responce
-//{
-//    'name':'...',
-//    'id':'' ,
-//    'status:ok/error',
-//    'error_message':''
-//}
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {
@@ -108,7 +99,6 @@
         self.gameName = j[@"name"];
         self.gameID = j[@"id"];
         
-        //DataService *dService = [IQSettings sharedInstance].dService;
         DataService *dService = [[DataService alloc] init];
         dService.delegate = self;
         [dService openGame:self.gameID];
@@ -116,13 +106,6 @@
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
 }
-
-//expected request responce
-//{
-//    'players_to_start':2,
-//    status:ok/error,
-//    'error_message':''
-//}
 
 - (void)dataServiceOpenGameFinished:(id)sender withData:(NSData *)data
 {
@@ -134,7 +117,6 @@
         openGameSuccessfull = NO;
     
     if (openGameSuccessfull) {
-        //DataService *dService = [IQSettings sharedInstance].dService;
         DataService *dService = [[DataService alloc] init];
         dService.delegate = self;
         [dService refreshGame:self.gameID];
@@ -142,17 +124,6 @@
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
 }
-
-//expected request responce
-//{
-//    'players_to_start':1,
-//    'users':['user1',
-//             'user2'
-//             ],
-//    'refresh_interval':1000ms,
-//    'status':'ok/error',
-//    'error_message':''
-//}
 
 - (void)dataServiceRefreshGameFinished:(id)sender withData:(NSData *)data
 {

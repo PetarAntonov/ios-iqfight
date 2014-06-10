@@ -77,7 +77,6 @@
         [[IQSettings sharedInstance] showHud:@"" onView:self.view];
     });
     
-    //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService createRegistrationWithUsername:dic[@"username"] password:dic[@"password"] andPassword1:dic[@"password1"]];
@@ -89,13 +88,6 @@
 }
 
 #pragma mark - Service delegates
-
-//expected request responce
-//{
-//    'username':'',
-//    'status':ok/error,
-//    'error_messag'e:"Wrong user/Server error|Try later"
-//}
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {

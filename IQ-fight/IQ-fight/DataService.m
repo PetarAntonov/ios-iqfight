@@ -28,8 +28,7 @@
     self.OperationID = WSOperationsIsLogged;
     
     if (self.urlReader == nil)
-        self.urlReader = [IQSettings sharedInstance].urlReader;
-//        self.urlReader = [[URLReader alloc] init];
+        self.urlReader = [[URLReader alloc] init];
     [self.urlReader setDelegate:self];
     
     self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/is_logged"];
@@ -42,8 +41,7 @@
     self.OperationID = WSOperationsLogin;
     
     if (self.urlReader == nil)
-        self.urlReader = [IQSettings sharedInstance].urlReader;
-//        self.urlReader = [[URLReader alloc] init];
+        self.urlReader = [[URLReader alloc] init];
     [self.urlReader setDelegate:self];
     
     self.lastURL = [NSString stringWithFormat:@"%@%@?username=%@&password=%@", [IQSettings sharedInstance].servicesURL, @"/login", username, password];
@@ -66,8 +64,7 @@
     self.OperationID = WSOperationsRegistration;
     
     if (self.urlReader == nil)
-        self.urlReader = [IQSettings sharedInstance].urlReader;
-//        self.urlReader = [[URLReader alloc] init];
+        self.urlReader = [[URLReader alloc] init];
     [self.urlReader setDelegate:self];
     
     self.lastURL = [NSString stringWithFormat:@"%@%@?username=%@&password=%@&password1=%@", [IQSettings sharedInstance].servicesURL, @"/register", username, password, password1];
@@ -91,8 +88,7 @@
     self.OperationID = WSOperationsGetGames;
     
     if (self.urlReader == nil)
-        self.urlReader = [IQSettings sharedInstance].urlReader;
-//        self.urlReader = [[URLReader alloc] init];
+        self.urlReader = [[URLReader alloc] init];
     [self.urlReader setDelegate:self];
     
     self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/get_games"];
@@ -105,8 +101,7 @@
     self.OperationID = WSOperationsOpenGame;
     
     if (self.urlReader == nil)
-        self.urlReader = [IQSettings sharedInstance].urlReader;
-//        self.urlReader = [[URLReader alloc] init];
+        self.urlReader = [[URLReader alloc] init];
     [self.urlReader setDelegate:self];
     
     self.lastURL = [NSString stringWithFormat:@"%@%@?id=%@", [IQSettings sharedInstance].servicesURL, @"/open_game", gameID];

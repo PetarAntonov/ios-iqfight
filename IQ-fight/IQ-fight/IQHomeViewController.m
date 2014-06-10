@@ -78,7 +78,6 @@
         [[IQSettings sharedInstance] showHud:@"" onView:self.view];
     });
     
-    //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService getGames];
@@ -90,25 +89,12 @@
         [[IQSettings sharedInstance] showHud:@"" onView:self.view];
     });
     
-    //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService logout];
 }
 
 #pragma mark - Service delegates
-
-//expected request responce
-//{
-//    'games':
-//        [ {'id':8,
-//            'name': Ebane,
-//            'players_to_start':2}
-//         ],
-//    'refresh_interval':1000ms,
-//    'status':"ok/error",
-//    'error_message':''
-//}
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {

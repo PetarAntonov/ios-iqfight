@@ -28,7 +28,6 @@
     
     [self setCookie];
     
-    //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService isLogged];
@@ -50,13 +49,6 @@
 }
 
 #pragma mark - Service delegates
-
-//expected request responce
-//{
-//    'username':'',
-//    'status':"ok/error",
-//    'error_message':''
-//}
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {

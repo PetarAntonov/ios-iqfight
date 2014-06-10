@@ -40,6 +40,7 @@
 		A419B0E21905848900E60374 /* IQGameTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E11905848900E60374 /* IQGameTableViewCell.m */; };
 		A419B0E5190585B100E60374 /* IQGameLobyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E4190585B100E60374 /* IQGameLobyViewController.m */; };
 		A419B0E81905929B00E60374 /* IQGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A419B0E71905929B00E60374 /* IQGameViewController.m */; };
+		A41DBA8B1947509D00D6CB62 /* Responses.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A41DBA8A1947509D00D6CB62 /* Responses.rtf */; };
 		A4536283194300E80023B450 /* URLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = A4536282194300E80023B450 /* URLReader.m */; };
 		A45362861943023A0023B450 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A45362851943023A0023B450 /* Reachability.m */; };
 		A45362891943072B0023B450 /* DataService.m in Sources */ = {isa = PBXBuildFile; fileRef = A45362881943072B0023B450 /* DataService.m */; };
@@ -116,6 +117,7 @@
 		A419B0E4190585B100E60374 /* IQGameLobyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGameLobyViewController.m; sourceTree = "<group>"; };
 		A419B0E61905929B00E60374 /* IQGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQGameViewController.h; sourceTree = "<group>"; };
 		A419B0E71905929B00E60374 /* IQGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQGameViewController.m; sourceTree = "<group>"; };
+		A41DBA8A1947509D00D6CB62 /* Responses.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Responses.rtf; sourceTree = "<group>"; };
 		A4536281194300E80023B450 /* URLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLReader.h; sourceTree = "<group>"; };
 		A4536282194300E80023B450 /* URLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLReader.m; sourceTree = "<group>"; };
 		A45362841943023A0023B450 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 		A4111D071920D72C002B8E52 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A41DBA8A1947509D00D6CB62 /* Responses.rtf */,
 				A4111D081920D740002B8E52 /* background.png */,
 			);
 			name = Resources;
@@ -443,6 +446,7 @@
 				A419B0851905553900E60374 /* InfoPlist.strings in Resources */,
 				A4111D091920D740002B8E52 /* background.png in Resources */,
 				A419B0901905553900E60374 /* Images.xcassets in Resources */,
+				A41DBA8B1947509D00D6CB62 /* Responses.rtf in Resources */,
 				A419B0AF1905586E00E60374 /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

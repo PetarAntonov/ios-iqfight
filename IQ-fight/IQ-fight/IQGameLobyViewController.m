@@ -58,7 +58,7 @@
     
     [self updateUI];
     
-//    [self performSelector:@selector(refreshGame) withObject:nil afterDelay:([self.game[@"refresh_interval"] intValue] / 1000)];
+    [self performSelector:@selector(refreshGame) withObject:nil afterDelay:([self.game[@"refresh_interval"] intValue] / 1000)];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -89,7 +89,6 @@
 
 - (void)doRefreshGame
 {
-    //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService refreshGame:self.gameID];
@@ -101,7 +100,6 @@
         [[IQSettings sharedInstance] showHud:@"" onView:self.view];
     });
     
-    //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService playGame];
@@ -109,24 +107,12 @@
 
 - (void)doQuitGame
 {
-    //DataService *dService = [IQSettings sharedInstance].dService;
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService quitGame];
 }
 
 #pragma mark - Service delegates
-
-//expected request responce
-//{
-//    'players_to_start':1,
-//    'users':['user1',
-//             'user2'
-//             ],
-//    'refresh_interval':1000ms,
-//    'status':'ok/error',
-//    'error_message':''
-//}
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {
@@ -166,30 +152,6 @@
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
 }
-
-//expected request responce
-//{
-//    'refresh_interval':1000,
-//    'question':[],
-//    'answers':[],
-//    'users':['user1','user2'],
-//    'remaing_time':53*1000,
-//    'answered_user':'',
-//    'status':ok/error,
-//    'error_message':''
-//}
-
-
-//'answers':[{
-//          'answer':'TEj',
-//          'id':90
-//          }]
-
-//'question':{
-//    'question':'Tuk e tekst',
-//    'explanation':'Pak tekst',
-//    'picture':'Tuk e tekst NO s URL do snimkata'
-//}
 
 - (void)dataServicePlayGameFinished:(id)sender withData:(NSData *)data
 {
