@@ -7,7 +7,6 @@
 //
 
 #import "IQGameLobyViewController.h"
-#import "IQServerCommunication.h"
 #import "IQSettings.h"
 #import "IQGameViewController.h"
 #import "DataService.h"
@@ -22,7 +21,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeToStartLabel;
 @property (weak, nonatomic) IBOutlet UILabel *gameNameLabel;
 
-@property (nonatomic, strong) IQServerCommunication *sv;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSTimer *timerToStart;
 @property (nonatomic, assign) NSInteger timeToStart;
@@ -59,15 +57,6 @@
     [self updateUI];
     
     [self performSelector:@selector(refreshGame) withObject:nil afterDelay:([self.game[@"refresh_interval"] intValue] / 1000)];
-}
-
--(void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    
-    if (![self.navigationController.viewControllers containsObject:self]) {
-        [self performSelectorInBackground:@selector(doQuitGame) withObject:nil];
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -167,31 +156,26 @@
             [[IQSettings sharedInstance] hideHud:self.view];
             self.play = j;
             [[IQSettings sharedInstance] LogThis:[NSString stringWithFormat:@"%@", self.play ]];
-         //   [self performSegueWithIdentifier:@"playGameSegue" sender:nil];
+            [self performSegueWithIdentifier:@"playGameSegue" sender:nil];
         });
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
 }
 
-- (void)dataServiceQuitGame:(id)sender withData:(NSData *)data
-{
-
-}
-
 #pragma mark - Private Methods
 
 - (void)updateTimeLabel
 {
-//    if (self.timeToStart > 0) {
-//        self.timeToStartLabel.text = [NSString stringWithFormat:@"Game will start in: %d", self.timeToStart - 1];
-//        self.timeToStart--;
-//        if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGameLobyViewController class]]) {
-//            [self performSelector:@selector(updateTimeLabel) withObject:nil afterDelay:1];
-//        }
-//    } else {
+    if (self.timeToStart > 1) {
+        self.timeToStartLabel.text = [NSString stringWithFormat:@"Game will start in: %d", self.timeToStart - 1];
+        self.timeToStart--;
+        if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGameLobyViewController class]]) {
+            [self performSelector:@selector(updateTimeLabel) withObject:nil afterDelay:1];
+        }
+    } else {
         [self performSelectorInBackground:@selector(startGame) withObject:nil];
-//    }
+    }
 }
 
 - (void)updateUI

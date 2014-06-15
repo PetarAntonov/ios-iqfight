@@ -9,8 +9,13 @@
 #import "IQGameViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "IQServerCommunication.h"
+#import "DataService.h"
+#import "IQSettings.h"
+#import "UITextView+convertSizeToFit.h"
+#import "IQHomeViewController.h"
 
-@interface IQGameViewController ()
+@interface IQGameViewController () <DataServiceDelegate>
+
 @property (weak, nonatomic) IBOutlet UILabel *player1Label;
 @property (weak, nonatomic) IBOutlet UILabel *player2Label;
 @property (weak, nonatomic) IBOutlet UILabel *player3Label;
@@ -22,6 +27,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *answer3Button;
 @property (weak, nonatomic) IBOutlet UIButton *answer4Button;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *answer1ImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *answer2ImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *answer3ImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *answer4ImageView;
 
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) IQServerCommunication *sv;
@@ -34,7 +43,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -43,180 +51,215 @@
 {
     [super viewDidLoad];
     
-    [self updateUI];
-    
-  //  self.timer = [NSTimer scheduledTimerWithTimeInterval:([self.play[@"refresh_interval"] intValue] / 1000) target:self selector:@selector(refreshQuestion) userInfo:nil repeats:YES];
+    [self refreshQuestion];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    //izvikai zaqvkata za vapros
+    self.answer1Button.titleLabel.text = @"";
+    self.answer2Button.titleLabel.text = @"";
+    self.answer3Button.titleLabel.text = @"";
+    self.answer4Button.titleLabel.text = @"";
+    
+    [self updateUI];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+}
+
+- (void)refreshQuestion
+{
+    [self performSelectorInBackground:@selector(doRefreshQuestion) withObject:nil];
+}
+
+- (void)doRefreshQuestion
+{
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService playGame];
+}
+
+#pragma mark - Service delegates
+
+- (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
+        for (UIViewController *vc in self.navigationController.viewControllers) {
+            if ([vc isKindOfClass:[IQHomeViewController class]]) {
+                [self.navigationController popToViewController:vc animated:YES];
+                break;
+            }
+        }
+    });
+}
+
+- (void)dataServicePlayGameFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL refreshQuestionSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        refreshQuestionSuccessfull = NO;
+    
+    if (refreshQuestionSuccessfull) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.play = j;
+            
+            [self updateUI];
+            
+            [self performSelector:@selector(refreshQuestion) withObject:nil afterDelay:1.0];
+        });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
 }
 
 #pragma mark - Action Methods
 
 - (IBAction)answerButtonTapped:(id)sender
 {
-    UIButton *button = (UIButton *)sender;
-    
-    if (self.sv == nil) {
-        self.sv = [[IQServerCommunication alloc] init];
-    }
-    
-    [self.sv answerQuestion:[NSString stringWithFormat:@"%d", button.tag]  withCompletion:^(id result, NSError *error) {
-        //kakvo stava kato izbera otgovor
-        if (result) {
-            
-        } else {
-            [self.timer invalidate];
-            self.timer = nil;
-            
-            [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-        }
-    }];
-    
+//    UIButton *button = (UIButton *)sender;
 }
 
-//{
-//    'refresh_interval':1000,
-//    'question':[],
-//    'answers':[],
-//    'users':['user1','user2'],
-//    'remaing_time':53*1000,
-//    'answered_user':'',
-//    'status':ok/error,
-//    'error_message':''
-//}
-
-
-//'answers':[{
-//          'answer':'TEj',
-//          'id':90
-//          }]
-
-//'question':{
-//    'question':'Tuk e tekst',
-//    'explanation':'Pak tekst',
-//    'picture':'Tuk e tekst NO s URL do snimkata'
-//}
-
-//Answered user:''/Nobody/'sss@ww.com'
-
 #pragma mark - Private Methods
+
+//expected request responce
+//{
+//	"status" = ok;
+//	"error_message" = "";
+//	"remaing_time" = 58605;
+//	"refresh_interval" = 60000;
+//  "answered_user" = "";
+//	"users" = [{
+//         name = "peshotest2@abv.bg";
+//          points = 0;
+//     		  }];
+//	"question" = {
+//        		  "explanation" = "The sequence explain planets of Solar system by distance from the Sun through a one: Jupi";
+//        		  "picture" = "";
+//        		  "question" = "Which is the next planet in sequence: Mercury, Earth, Jupiter?";
+//     			  "source" = Admin;
+//    			  };
+//  "answers" = [{
+//            	answer = Venera;
+//         		id = 17;
+//            	picture = "";
+//     		   	}];
+//}
 
 - (void)updateUI
 {
 //trqbva da polucha nomer na vaprosa
-    self.title = self.play[@""];
+    //self.title = self.play[@""];
     
-    self.player1Label.text = @"";
-    self.player2Label.text = @"";
-    self.player3Label.text = @"";
-    
-    if ([self.play[@"users"] count] > 0 && ![self.play[@"users"][0] isEqualToString:@""]) {
-        self.player1Label.text = self.play[@"users"][0];
+    if ([self.play[@"users"] count] > 0 && ![self.play[@"users"][0][@"name"] isEqualToString:@""]) {
+        self.player1Label.text = [NSString stringWithFormat:@"%@: %@", self.play[@"users"][0][@"name"], self.play[@"users"][0][@"points"]];
     } else {
         self.player1Label.text = @"";
     }
-    if ([self.play[@"users"] count] > 1 && ![self.play[@"users"][1] isEqualToString:@""]) {
-        self.player2Label.text = self.play[@"users"][1];
+    if ([self.play[@"users"] count] > 1 && ![self.play[@"users"][1][@"name"] isEqualToString:@""]) {
+        self.player2Label.text = [NSString stringWithFormat:@"%@: %@", self.play[@"users"][1][@"name"], self.play[@"users"][1][@"points"]];
     } else {
         self.player2Label.text = @"";
     }
-    if ([self.play[@"users"] count] > 2 && ![self.play[@"users"][2] isEqualToString:@""]) {
-        self.player3Label.text = self.play[@"users"][2];
+    if ([self.play[@"users"] count] > 2 && ![self.play[@"users"][2][@"name"] isEqualToString:@""]) {
+        self.player3Label.text = [NSString stringWithFormat:@"%@: %@", self.play[@"users"][2][@"name"], self.play[@"users"][2][@"points"]];
     } else {
         self.player3Label.text = @"";
     }
     
-/* ako ima i rezultat za tekushtiq igrach
-    self.player1Label.text = [NSString stringWithFormat:@"%@: %@", self.play[@"users"][0][0], self.play[@"users"][0][1]];
-    self.player2Label.text = [NSString stringWithFormat:@"%@: %@", self.play[@"users"][1][0], self.play[@"users"][1][1]];
-    self.player3Label.text = [NSString stringWithFormat:@"%@: %@", self.play[@"users"][2][0], self.play[@"users"][2][1]];
-*/
     self.timeLeftLabel.text = [NSString stringWithFormat:@"Time left: %d", ([self.play[@"remaing_time"] intValue] / 1000)];
+    
     self.questionTextView.text = self.play[@"question"][@"question"];
-    self.answer1Button.titleLabel.text = self.play[@"answers"][0][@"answer"];
-    self.answer2Button.titleLabel.text = self.play[@"answers"][1][@"answer"];
-    self.answer3Button.titleLabel.text = self.play[@"answers"][2][@"answer"];
-    self.answer4Button.titleLabel.text = self.play[@"answers"][3][@"answer"];
+    self.questionTextView.font = [UIFont boldSystemFontOfSize:14.0];
+    [self.questionTextView convertSizeToFit];
     
-    self.answer1Button.tag = [self.play[@"answers"][0][@"id"] intValue];
-    self.answer2Button.tag = [self.play[@"answers"][1][@"id"] intValue];
-    self.answer3Button.tag = [self.play[@"answers"][2][@"id"] intValue];
-    self.answer4Button.tag = [self.play[@"answers"][3][@"id"] intValue];
-    
-//trqbva mi nomera na vaprosa
-    if ([self.play[@"answered_user"] isEqualToString:@""]) {
-        self.infoLabel.text = @"";
-        self.infoLabel.hidden = YES;
-    } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
-        self.infoLabel.text = [NSString stringWithFormat:@"Nobody answer correct on question %d", [self.play[@"question_number"] intValue] - 1];
-        self.infoLabel.hidden = NO;
+    if ([self.play[@"question"][@"picture"] isEqualToString:@""] || self.play[@"question"][@"picture"] == nil) {
+        self.questionImageView.hidden = YES;
+        self.questionImageView.frame = CGRectMake(10, 146, CGRectGetWidth(self.questionImageView.frame), 1);
+        self.answer1Button.frame = CGRectMake(10, CGRectGetMaxY(self.questionTextView.frame), CGRectGetWidth(self.answer1Button.frame), CGRectGetHeight(self.answer1Button.frame));
+        self.answer2Button.frame = CGRectMake(162, CGRectGetMaxY(self.questionTextView.frame), CGRectGetWidth(self.answer2Button.frame), CGRectGetHeight(self.answer2Button.frame));
+        self.answer3Button.frame = CGRectMake(10, CGRectGetMaxY(self.answer1Button.frame) + 4, CGRectGetWidth(self.answer3Button.frame), CGRectGetHeight(self.answer3Button.frame));
+        self.answer4Button.frame = CGRectMake(162, CGRectGetMaxY(self.answer2Button.frame) + 4, CGRectGetWidth(self.answer4Button.frame), CGRectGetHeight(self.answer4Button.frame));
+        self.answer1ImageView.frame = self.answer1Button.frame;
+        self.answer2ImageView.frame = self.answer2Button.frame;
+        self.answer3ImageView.frame = self.answer3Button.frame;
+        self.answer4ImageView.frame = self.answer4Button.frame;
     } else {
-        self.infoLabel.text = [NSString stringWithFormat:@"%@ answer correct on question %d", self.play[@"answered_user"], [self.play[@"question_number"] intValue] - 1];
-        self.infoLabel.hidden = NO;
+        self.questionImageView.hidden = NO;
+        self.questionImageView.frame = CGRectMake(10, CGRectGetMaxY(self.questionTextView.frame) - 3, CGRectGetWidth(self.questionImageView.frame), 140);
+        NSString *pictureURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, self.play[@"question"][@"picture"]];
+        [self.questionImageView setImageWithURL:[NSURL URLWithString:pictureURLString]];
+        
+        self.answer1Button.frame = CGRectMake(10, CGRectGetMaxY(self.questionImageView.frame) + 4, CGRectGetWidth(self.answer1Button.frame), CGRectGetHeight(self.answer1Button.frame));
+        self.answer2Button.frame = CGRectMake(162, CGRectGetMaxY(self.questionImageView.frame) + 4, CGRectGetWidth(self.answer2Button.frame), CGRectGetHeight(self.answer2Button.frame));
+        self.answer3Button.frame = CGRectMake(10, CGRectGetMaxY(self.answer1Button.frame) + 4, CGRectGetWidth(self.answer3Button.frame), CGRectGetHeight(self.answer3Button.frame));
+        self.answer4Button.frame = CGRectMake(162, CGRectGetMaxY(self.answer2Button.frame) + 4, CGRectGetWidth(self.answer4Button.frame), CGRectGetHeight(self.answer4Button.frame));
+        self.answer1ImageView.frame = self.answer1Button.frame;
+        self.answer2ImageView.frame = self.answer2Button.frame;
+        self.answer3ImageView.frame = self.answer3Button.frame;
+        self.answer4ImageView.frame = self.answer4Button.frame;
     }
     
-    if (![self.play[@"question"][@"picture"] isEqualToString:@""]) {
-        self.questionImageView.hidden = NO;
-        self.questionImageView.frame = CGRectMake(20, 78, CGRectGetWidth(self.questionImageView.frame), 140);
-        [self.questionImageView setImageWithURL:[NSURL URLWithString:self.play[@"question"][@"picture"]]];
-        
-        int height = CGRectGetHeight(self.questionTextView.frame);
-        [self.questionTextView sizeToFit];
-        if (CGRectGetHeight(self.questionTextView.frame) > height) {
-            self.questionTextView.frame = CGRectMake(20, 226, CGRectGetWidth(self.questionTextView.frame), height);
+    if (self.play[@"answers"] != nil && [self.play[@"answers"] count] > 0) {
+        NSArray *answers = self.play[@"answers"];
+        if ([answers[0][@"picture"] isEqualToString:@""]) {
+            [self.answer1Button setTitle:answers[0][@"answer"] forState:UIControlStateNormal];
+            self.answer1ImageView.image = nil;
         } else {
-            self.questionTextView.frame = CGRectMake(20, 226, CGRectGetWidth(self.questionTextView.frame), CGRectGetHeight(self.questionTextView.frame));
+            [self.answer1Button setTitle:@"" forState:UIControlStateNormal];
+            NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[0][@"picture"]];
+            [self.answer1ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
+        }
+        if ([answers[1][@"picture"] isEqualToString:@""]) {
+            [self.answer2Button setTitle:answers[1][@"answer"] forState:UIControlStateNormal];
+            self.answer2ImageView.image = nil;
+        } else {
+            [self.answer2Button setTitle:@"" forState:UIControlStateNormal];
+            NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[1][@"picture"]];
+            [self.answer2ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
+        }
+        if ([answers[2][@"picture"] isEqualToString:@""]) {
+            [self.answer3Button setTitle:answers[2][@"answer"] forState:UIControlStateNormal];
+            self.answer3ImageView.image = nil;
+        } else {
+            [self.answer3Button setTitle:@"" forState:UIControlStateNormal];
+            NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[2][@"picture"]];
+            [self.answer3ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
+        }
+        if ([answers[3][@"picture"] isEqualToString:@""]) {
+            [self.answer4Button setTitle:answers[3][@"answer"] forState:UIControlStateNormal];
+            self.answer4ImageView.image = nil;
+        } else {
+            [self.answer4Button setTitle:@"" forState:UIControlStateNormal];
+            NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[3][@"picture"]];
+            [self.answer4ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
         }
         
-        self.answer1Button.frame = CGRectMake(20, CGRectGetMaxX(self.questionTextView.frame) + 8, CGRectGetWidth(self.answer1Button.frame), CGRectGetHeight(self.answer1Button.frame));
-        self.answer2Button.frame = CGRectMake(20, CGRectGetMaxX(self.questionTextView.frame) + 8, CGRectGetWidth(self.answer2Button.frame), CGRectGetHeight(self.answer2Button.frame));
-        self.answer3Button.frame = CGRectMake(20, CGRectGetMaxX(self.answer1Button.frame) + 8, CGRectGetWidth(self.answer3Button.frame), CGRectGetHeight(self.answer3Button.frame));
-        self.answer4Button.frame = CGRectMake(20, CGRectGetMaxX(self.answer2Button.frame) + 8, CGRectGetWidth(self.answer4Button.frame), CGRectGetHeight(self.answer4Button.frame));
-    } else {
-        self.questionImageView.hidden = YES;
-        self.questionImageView.frame = CGRectMake(20, 78, CGRectGetWidth(self.questionImageView.frame), 1);
-        self.questionTextView.frame = CGRectMake(20, 78, CGRectGetWidth(self.questionTextView.frame), CGRectGetHeight(self.questionTextView.frame));
-        self.answer1Button.frame = CGRectMake(20, 190, CGRectGetWidth(self.answer1Button.frame), CGRectGetHeight(self.answer1Button.frame));
-        self.answer2Button.frame = CGRectMake(164, 190, CGRectGetWidth(self.answer2Button.frame), CGRectGetHeight(self.answer2Button.frame));
-        self.answer3Button.frame = CGRectMake(20, 248, CGRectGetWidth(self.answer3Button.frame), CGRectGetHeight(self.answer3Button.frame));
-        self.answer4Button.frame = CGRectMake(164, 248, CGRectGetWidth(self.answer4Button.frame), CGRectGetHeight(self.answer4Button.frame));
+        self.answer1Button.tag = [answers[0][@"id"] intValue];
+        self.answer2Button.tag = [answers[1][@"id"] intValue];
+        self.answer3Button.tag = [answers[2][@"id"] intValue];
+        self.answer4Button.tag = [answers[3][@"id"] intValue];
     }
-}
-//
-//- (void)refreshQuestion
-//{
-//    if (self.sv == nil) {
-//        self.sv = [[IQServerCommunication alloc] init];
+    
+//trqbva mi nomera na vaprosa
+//    if ([self.play[@"answered_user"] isEqualToString:@""]) {
+//        self.infoLabel.text = @"";
+//        self.infoLabel.hidden = YES;
+//    } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
+//        self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on the previous question"];
+//        self.infoLabel.hidden = NO;
+//    } else {
+//        self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on the previous question", self.play[@"answered_user"]];
+//        self.infoLabel.hidden = NO;
 //    }
-//    
-//    [self.sv playGameWithCompletion:^(id result, NSError *error) {
-//        if (result) {
-//            self.play = result;
-//            
-//            [self.timer invalidate];
-//            self.timer = nil;
-//            self.timer = [NSTimer scheduledTimerWithTimeInterval:([self.play[@"refresh_interval"] intValue] / 1000) target:self selector:@selector(refreshQuestion) userInfo:nil repeats:YES];
-//            
-//            [self updateUI];
-//        } else {
-//            [self.timer invalidate];
-//            self.timer = nil;
-//            
-//            [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
-//        }
-//    }];
-//}
+}
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message cancelButton:(NSString *)button
 {

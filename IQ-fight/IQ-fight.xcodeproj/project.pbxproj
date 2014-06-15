@@ -51,6 +51,7 @@
 		A474BFD81917D00800FDCE3C /* NSString+RegularExpressions.m in Sources */ = {isa = PBXBuildFile; fileRef = A474BFD71917D00800FDCE3C /* NSString+RegularExpressions.m */; };
 		A474BFDB1918283E00FDCE3C /* IQResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A474BFDA1918283E00FDCE3C /* IQResultViewController.m */; };
 		A4BE470C19446510008EC970 /* IQNewGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BE470B19446510008EC970 /* IQNewGameViewController.m */; };
+		A4CC7A0C194E214B00E8F2B2 /* UITextView+convertSizeToFit.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC7A0B194E214B00E8F2B2 /* UITextView+convertSizeToFit.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,6 +139,8 @@
 		A474BFDA1918283E00FDCE3C /* IQResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQResultViewController.m; sourceTree = "<group>"; };
 		A4BE470A19446510008EC970 /* IQNewGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQNewGameViewController.h; sourceTree = "<group>"; };
 		A4BE470B19446510008EC970 /* IQNewGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQNewGameViewController.m; sourceTree = "<group>"; };
+		A4CC7A0A194E214B00E8F2B2 /* UITextView+convertSizeToFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+convertSizeToFit.h"; sourceTree = "<group>"; };
+		A4CC7A0B194E214B00E8F2B2 /* UITextView+convertSizeToFit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+convertSizeToFit.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +214,7 @@
 			children = (
 				A419B0891905553900E60374 /* IQAppDelegate.h */,
 				A419B08A1905553900E60374 /* IQAppDelegate.m */,
+				A419B0B5190559C400E60374 /* IQHomeViewController.m */,
 				A419B0D41905783E00E60374 /* Libraries */,
 				A419B0D5190578BA00E60374 /* Services */,
 				A46EE27C190C20A600671907 /* Utilities */,
@@ -270,7 +274,6 @@
 				A474BFD31917C9D200FDCE3C /* IQRegistrationViewController.h */,
 				A474BFD41917C9D200FDCE3C /* IQRegistrationViewController.m */,
 				A419B0B4190559C400E60374 /* IQHomeViewController.h */,
-				A419B0B5190559C400E60374 /* IQHomeViewController.m */,
 				A419B0D919057F5100E60374 /* IQGamesViewController.h */,
 				A419B0DA19057F5100E60374 /* IQGamesViewController.m */,
 				A4BE470A19446510008EC970 /* IQNewGameViewController.h */,
@@ -353,6 +356,8 @@
 				A46EE285190C221600671907 /* IQCurrentUser.m */,
 				A474BFD61917D00800FDCE3C /* NSString+RegularExpressions.h */,
 				A474BFD71917D00800FDCE3C /* NSString+RegularExpressions.m */,
+				A4CC7A0A194E214B00E8F2B2 /* UITextView+convertSizeToFit.h */,
+				A4CC7A0B194E214B00E8F2B2 /* UITextView+convertSizeToFit.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -469,6 +474,7 @@
 				A474BFD81917D00800FDCE3C /* NSString+RegularExpressions.m in Sources */,
 				A419B0CD1905783900E60374 /* AFImageRequestOperation.m in Sources */,
 				A419B0B31905599200E60374 /* IQLoginViewController.m in Sources */,
+				A4CC7A0C194E214B00E8F2B2 /* UITextView+convertSizeToFit.m in Sources */,
 				A46EE286190C221600671907 /* IQCurrentUser.m in Sources */,
 				A419B0B6190559C400E60374 /* IQHomeViewController.m in Sources */,
 				A419B0E81905929B00E60374 /* IQGameViewController.m in Sources */,

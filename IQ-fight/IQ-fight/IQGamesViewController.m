@@ -19,7 +19,6 @@
 @property (nonatomic, strong) NSMutableDictionary *game;
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *gameID;
-@property (nonatomic, assign) BOOL canRefresh;
 
 @end
 
@@ -39,7 +38,6 @@
     
     self.title = @"Games";
     
-    self.canRefresh = YES;
     self.gameID = @"";
     self.gameName = @"";
     self.game = [@{} mutableCopy];
@@ -55,7 +53,7 @@
 {
     [super viewWillAppear:animated];
     
-    [self performSelector:@selector(refreshGames) withObject:nil afterDelay:([self.games[@"refresh_interval"] intValue] / 1000)];
+    [self quitGames];
 }
 
 - (void)didReceiveMemoryWarning
@@ -90,17 +88,26 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    self.canRefresh = NO;
     self.gameID = self.games[@"games"][indexPath.row][@"id"];
     self.gameName = self.games[@"games"][indexPath.row][@"name"];
-    [self performSelectorInBackground:@selector(doQuitGame) withObject:nil];
+    [self openGame];
 }
 
 #pragma mark - Private Methods
 
+- (void)quitGames
+{
+    [self performSelectorInBackground:@selector(doQuitGame) withObject:nil];
+}
+
 - (void)refreshGames
 {
     [self performSelectorInBackground:@selector(doGetGames) withObject:nil];
+}
+
+- (void)openGame
+{
+    [self performSelectorInBackground:@selector(doOpenGame) withObject:nil];
 }
 
 - (void)doGetGames
@@ -121,13 +128,41 @@
     [dService quitGame];
 }
 
+- (void)doOpenGame
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+    });
+    
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService openGame:self.gameID];
+}
+
 #pragma mark - Service delegates
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] hideHud:self.view];
         [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
     });
+}
+
+- (void)dataServiceQuitGame:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL quitGameSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        quitGameSuccessfull = NO;
+    
+    if (quitGameSuccessfull) {
+        [self doGetGames];
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
 }
 
 - (void)dataServiceGetGamesFinished:(id)sender withData:(NSData *)data
@@ -150,24 +185,6 @@
                 [self performSelector:@selector(refreshGames) withObject:nil afterDelay:([self.games[@"refresh_interval"] intValue] / 1000)];
             }
         });
-    } else {
-        [self dataServiceError:self errorMessage:j[@"error_message"]];
-    }
-}
-
-- (void)dataServiceQuitGame:(id)sender withData:(NSData *)data
-{
-    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
-    
-    BOOL quitGameSuccessfull = YES;
-    
-    if (![j[@"status"] isEqualToString:@"ok"])
-        quitGameSuccessfull = NO;
-    
-    if (quitGameSuccessfull) {
-        DataService *dService = [[DataService alloc] init];
-        dService.delegate = self;
-        [dService openGame:self.gameID];
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
