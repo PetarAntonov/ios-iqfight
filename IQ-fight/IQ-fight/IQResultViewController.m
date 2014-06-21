@@ -7,14 +7,18 @@
 //
 
 #import "IQResultViewController.h"
-#import "IQServerCommunication.h"
+#import "DataService.h"
+#import "IQGamesViewController.h"
+#import "IQSettings.h"
 
-@interface IQResultViewController ()
+@interface IQResultViewController () <DataServiceDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *player1Label;
 @property (weak, nonatomic) IBOutlet UILabel *player2Label;
 @property (weak, nonatomic) IBOutlet UILabel *player3Label;
+
+@property (nonatomic, strong) NSDictionary *result;
 
 @end
 
@@ -24,7 +28,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -36,10 +39,60 @@
     self.title = @"Result";
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.navigationItem.hidesBackButton = YES;
+    
+    [self performSelectorInBackground:@selector(doShowResult) withObject:nil];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+}
+
+- (void)doShowResult
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+    });
+    
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService showResult];
+}
+
+#pragma mark - Service delegates
+
+- (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] hideHud:self.view];
+        [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
+    });
+}
+
+- (void)dataServiceResultFinished:(id)sender withData:(NSData *)data
+{
+    //TODO: kakvo vrashta zaqvkata
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL resultSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        resultSuccessfull = NO;
+    
+    if (resultSuccessfull) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
+            self.result = j;
+            [self updateUI];
+        });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
 }
 
 #pragma mark - Action Methods
@@ -51,17 +104,13 @@
 
 - (IBAction)chooseNewGameButtonTapped:(id)sender
 {
-//napravi delegate da se setnat igrite
-    IQServerCommunication *sc = [[IQServerCommunication alloc] init];
-    [sc getGamesWithCompletion:^(id result, NSError *error) {
-        if (result) {
-//            self.games = result[@"games"];
-//            self.refreshInterval = [result[@"refresh_interval"] integerValue];
-            [self.navigationController popToViewController:self.navigationController.viewControllers[1] animated:YES];
-        } else {
-            [self showAlertWithTitle:@"Error" message:[error localizedDescription] cancelButton:@"OK"];
+//TODO:opravi tuka, move games kontrollera da ne e v nav controlera
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isKindOfClass:[IQGamesViewController class]]) {
+            [self.navigationController popToViewController:vc animated:YES];
+            break;
         }
-    }];
+    }
 }
 
 #pragma mark - Private Methods
@@ -70,6 +119,25 @@
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:button otherButtonTitles:nil];
     [alert show];
+}
+
+- (void)updateUI
+{
+    if ([self.result[@"users"] count] > 0 && ![self.result[@"users"][0][@"name"] isEqualToString:@""]) {
+        self.player1Label.text = [NSString stringWithFormat:@"%@: %@", self.result[@"users"][0][@"name"], self.result[@"users"][0][@"points"]];
+    } else {
+        self.player1Label.text = @"";
+    }
+    if ([self.result[@"users"] count] > 1 && ![self.result[@"users"][1][@"name"] isEqualToString:@""]) {
+        self.player2Label.text = [NSString stringWithFormat:@"%@: %@", self.result[@"users"][1][@"name"], self.result[@"users"][1][@"points"]];
+    } else {
+        self.player2Label.text = @"";
+    }
+    if ([self.result[@"users"] count] > 2 && ![self.result[@"users"][2][@"name"] isEqualToString:@""]) {
+        self.player3Label.text = [NSString stringWithFormat:@"%@: %@", self.result[@"users"][2][@"name"], self.result[@"users"][2][@"points"]];
+    } else {
+        self.player3Label.text = @"";
+    }
 }
 
 @end

@@ -8,7 +8,6 @@
 
 #import "IQGameViewController.h"
 #import "UIImageView+AFNetworking.h"
-#import "IQServerCommunication.h"
 #import "DataService.h"
 #import "IQSettings.h"
 #import "UITextView+convertSizeToFit.h"
@@ -31,9 +30,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *answer2ImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *answer3ImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *answer4ImageView;
-
-@property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, strong) IQServerCommunication *sv;
 
 @end
 
@@ -83,11 +79,22 @@
     [dService playGame];
 }
 
+- (void)doAnswer:(UIButton *)button
+{
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService answerQuestion:[NSString stringWithFormat:@"%d", button.tag]];
+}
+
 #pragma mark - Service delegates
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (!self.answer1Button.enabled) {
+            [self enableButtons:YES];
+        }
+        
         [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
         for (UIViewController *vc in self.navigationController.viewControllers) {
             if ([vc isKindOfClass:[IQHomeViewController class]]) {
@@ -116,6 +123,28 @@
             [self performSelector:@selector(refreshQuestion) withObject:nil afterDelay:1.0];
         });
     } else {
+        if ([j[@"error_message"] isEqualToString:@"Game over"]) {
+            [self performSegueWithIdentifier:@"resultSegue" sender:nil];
+        } else {
+            [self dataServiceError:self errorMessage:j[@"error_message"]];
+        }
+    }
+}
+
+- (void)dataServiceAnswerQuestionFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL answerQuestionSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        answerQuestionSuccessfull = NO;
+    
+    if (answerQuestionSuccessfull) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self enableButtons:YES];
+        });
+    } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
 }
@@ -124,34 +153,12 @@
 
 - (IBAction)answerButtonTapped:(id)sender
 {
-//    UIButton *button = (UIButton *)sender;
+    UIButton *button = (UIButton *)sender;
+    [self enableButtons:NO];
+    [self performSelectorInBackground:@selector(doAnswer:) withObject:button];
 }
 
 #pragma mark - Private Methods
-
-//expected request responce
-//{
-//	"status" = ok;
-//	"error_message" = "";
-//	"remaing_time" = 58605;
-//	"refresh_interval" = 60000;
-//  "answered_user" = "";
-//	"users" = [{
-//         name = "peshotest2@abv.bg";
-//          points = 0;
-//     		  }];
-//	"question" = {
-//        		  "explanation" = "The sequence explain planets of Solar system by distance from the Sun through a one: Jupi";
-//        		  "picture" = "";
-//        		  "question" = "Which is the next planet in sequence: Mercury, Earth, Jupiter?";
-//     			  "source" = Admin;
-//    			  };
-//  "answers" = [{
-//            	answer = Venera;
-//         		id = 17;
-//            	picture = "";
-//     		   	}];
-//}
 
 - (void)updateUI
 {
@@ -249,22 +256,39 @@
     }
     
 //trqbva mi nomera na vaprosa
-//    if ([self.play[@"answered_user"] isEqualToString:@""]) {
-//        self.infoLabel.text = @"";
-//        self.infoLabel.hidden = YES;
-//    } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
-//        self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on the previous question"];
-//        self.infoLabel.hidden = NO;
-//    } else {
-//        self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on the previous question", self.play[@"answered_user"]];
-//        self.infoLabel.hidden = NO;
-//    }
+    if ([self.play[@"answered_user"] isEqualToString:@""]) {
+        self.infoLabel.text = @"";
+        self.infoLabel.hidden = YES;
+    } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
+        self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on the previous question"];
+        self.infoLabel.hidden = NO;
+        [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+    } else if (![self.play[@"answered_user"] isEqualToString:[IQSettings sharedInstance].currentUser.username]) {
+        self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on the previous question", self.play[@"answered_user"]];
+        self.infoLabel.hidden = NO;
+    } else {
+        self.infoLabel.text = @"You answered correct on the previous question";
+        self.infoLabel.hidden = NO;
+    }
 }
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message cancelButton:(NSString *)button
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:button otherButtonTitles:nil];
     [alert show];
+}
+
+- (void)hideInfoLabel
+{
+    self.infoLabel.hidden = YES;
+}
+
+- (void)enableButtons:(BOOL)enable
+{
+    self.answer1Button.enabled = enable;
+    self.answer2Button.enabled = enable;
+    self.answer3Button.enabled = enable;
+    self.answer4Button.enabled = enable;
 }
 
 @end

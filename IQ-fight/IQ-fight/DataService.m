@@ -175,7 +175,8 @@
 //    [self.urlReader getFromURL:self.lastURL postData:postData postMethod:@"POST"];
 }
 
-- (void)newGameWithName:(NSString *)name
+//TODO:napravi nov newGame s novi parametri pass i type
+- (void)newGame:(NSDictionary *)dic
 {
     self.OperationID = WSOperationsNewGame;
     
@@ -183,7 +184,7 @@
         self.urlReader = [[URLReader alloc] init];
     [self.urlReader setDelegate:self];
     
-    self.lastURL = [NSString stringWithFormat:@"%@%@?name=%@", [IQSettings sharedInstance].servicesURL, @"/new_game", name];
+    self.lastURL = [NSString stringWithFormat:@"%@%@?name=%@", [IQSettings sharedInstance].servicesURL, @"/new_game", dic[@"name"]];
     
     [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
 }
@@ -210,6 +211,20 @@
     [self.urlReader setDelegate:self];
     
     self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/logout"];
+    
+    [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
+}
+
+//TODO:tuk sloji validen url
+- (void)showResult
+{
+    self.OperationID = WSOperationResult;
+    
+    if (self.urlReader == nil)
+        self.urlReader = [[URLReader alloc] init];
+    [self.urlReader setDelegate:self];
+    
+    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/result"];
     
     [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
 }
@@ -266,6 +281,10 @@
         case WSOperationLogout:
             if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceLogoutFinished:withData:)])
                 [self.delegate dataServiceLogoutFinished:self withData:resultData];
+            break;
+        case WSOperationResult:
+            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceResultFinished:withData:)])
+                [self.delegate dataServiceResultFinished:self withData:resultData];
             break;
         default:
             break;

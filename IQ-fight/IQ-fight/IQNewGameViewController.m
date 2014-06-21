@@ -11,13 +11,17 @@
 #import "DataService.h"
 #import "IQGameLobyViewController.h"
 
-@interface IQNewGameViewController () <DataServiceDelegate>
+@interface IQNewGameViewController () <DataServiceDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
+@property (weak, nonatomic) IBOutlet UITextField *gameTypeTextField;
+@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *gameID;
 @property (nonatomic, strong) NSMutableDictionary *game;
+@property (nonatomic, strong) NSArray *types;
+@property (nonatomic, assign) int ddRow;
 
 @end
 
@@ -36,6 +40,10 @@
     [super viewDidLoad];
     
     self.game = [@{} mutableCopy];
+    self.types = @[@"Short 5 questions", @"Standart 10 questions", @"Long - 15 questions"];
+    self.ddRow = 1;
+    self.gameTypeTextField.text = self.types[1];
+    [self setupPickerView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,9 +65,16 @@
     [self.view endEditing:YES];
     
     NSString *name = self.nameTextField.text;
+    int type = self.ddRow;
+    NSString *password = @"";
+    if (![self.gameTypeTextField.text isEqualToString:@""] && self.gameTypeTextField.text != nil) {
+        password = self.gameTypeTextField.text;
+    }
     
     if (![name isEqualToString:@""]) {
-        [self performSelectorInBackground:@selector(doNewGame:) withObject:@{@"name":name}];
+        [self performSelectorInBackground:@selector(doNewGame:) withObject:@{@"name":name,
+                                                                             @"type":@(type),
+                                                                             @"password":password}];
     } else {
         [self showAlertWithTitle:@"Error" message:@"Enter game name." cancelButton:@"OK"];
     }
@@ -73,7 +88,7 @@
     
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
-    [dService newGameWithName:dic[@"name"]];
+    [dService newGame:dic];
 }
 
 #pragma mark - Service delegates
@@ -161,12 +176,53 @@
     return YES;
 }
 
+#pragma mark - Picker view delegates
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return [self.types count];
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return self.types[row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    self.ddRow = row;
+    self.gameTypeTextField.text = self.types[row];
+}
+
 #pragma mark - Private Methods
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message cancelButton:(NSString *)button
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:button otherButtonTitles:nil];
     [alert show];
+}
+
+- (void)setupPickerView
+{
+    UIPickerView *pickerView = [[UIPickerView alloc] init];
+    [pickerView setDelegate:self];
+    [pickerView setDataSource:self];
+    [pickerView setShowsSelectionIndicator:YES];
+    [pickerView selectRow:self.ddRow inComponent:0 animated:YES];
+    [pickerView setBackgroundColor:[UIColor whiteColor]];
+    [self.gameTypeTextField setInputView:pickerView];
+    
+    UIBarButtonItem *itemSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    UIToolbar *toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    [toolBar setBarStyle:UIBarStyleDefault];
+    [toolBar setBackgroundColor:[UIColor darkGrayColor]];
+    [toolBar setTintColor:[UIColor whiteColor]];
+    UIBarButtonItem *btnDone = [[UIBarButtonItem alloc] initWithTitle:@"OK" style:UIBarButtonItemStyleDone target:self.gameTypeTextField action:@selector(resignFirstResponder)];
+    [toolBar setItems:@[itemSpace, btnDone]];
+    [self.gameTypeTextField setInputAccessoryView:toolBar];
 }
 
 @end
