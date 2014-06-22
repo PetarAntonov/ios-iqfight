@@ -232,58 +232,58 @@
 #pragma mark - URLReader delegates
 
 - (void)urlRequestError:(id)sender errorMessage:(NSString *)errorMessage {
-    if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceError:errorMessage:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceError:errorMessage:)])
         [self.delegate dataServiceError:self errorMessage:errorMessage];
 }
 
 - (void)urlRequestFinished:(id)sender withData:(NSData *)resultData {
     switch (self.OperationID) {
         case WSOperationsIsLogged:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceIsLoggedFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceIsLoggedFinished:withData:)])
                 [self.delegate dataServiceIsLoggedFinished:self withData:resultData];
             break;
         case WSOperationsLogin:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceLoginFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceLoginFinished:withData:)])
                 [self.delegate dataServiceLoginFinished:self withData:resultData];
             break;
         case WSOperationsRegistration:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceRegistrationFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceRegistrationFinished:withData:)])
                 [self.delegate dataServiceRegistrationFinished:self withData:resultData];
             break;
         case WSOperationsGetGames:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceGetGamesFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceGetGamesFinished:withData:)])
                 [self.delegate dataServiceGetGamesFinished:self withData:resultData];
             break;
         case WSOperationsOpenGame:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceOpenGameFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceOpenGameFinished:withData:)])
                 [self.delegate dataServiceOpenGameFinished:self withData:resultData];
             break;
         case WSOperationsRefreshGame:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceRefreshGameFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceRefreshGameFinished:withData:)])
                 [self.delegate dataServiceRefreshGameFinished:self withData:resultData];
             break;
         case WSOperationsPlayGame:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServicePlayGameFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServicePlayGameFinished:withData:)])
                 [self.delegate dataServicePlayGameFinished:self withData:resultData];
             break;
         case WSOperationsAnswerQuestion:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceAnswerQuestionFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceAnswerQuestionFinished:withData:)])
                 [self.delegate dataServiceAnswerQuestionFinished:self withData:resultData];
             break;
         case WSOperationsNewGame:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceNewGameFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceNewGameFinished:withData:)])
                 [self.delegate dataServiceNewGameFinished:self withData:resultData];
             break;
         case WSOperationQuit:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceQuitGame:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceQuitGame:withData:)])
                 [self.delegate dataServiceQuitGame:self withData:resultData];
             break;
         case WSOperationLogout:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceLogoutFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceLogoutFinished:withData:)])
                 [self.delegate dataServiceLogoutFinished:self withData:resultData];
             break;
         case WSOperationResult:
-            if (self.delegate != NULL && [self.delegate respondsToSelector:@selector(dataServiceResultFinished:withData:)])
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceResultFinished:withData:)])
                 [self.delegate dataServiceResultFinished:self withData:resultData];
             break;
         default:

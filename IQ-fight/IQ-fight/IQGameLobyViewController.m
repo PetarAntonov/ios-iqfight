@@ -10,6 +10,7 @@
 #import "IQSettings.h"
 #import "IQGameViewController.h"
 #import "DataService.h"
+#import "IQGamesViewController.h"
 
 @interface IQGameLobyViewController () <DataServiceDelegate>
 
@@ -21,14 +22,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeToStartLabel;
 @property (weak, nonatomic) IBOutlet UILabel *gameNameLabel;
 
-@property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, strong) NSTimer *timerToStart;
+//@property (nonatomic, strong) NSTimer *timer;
+//@property (nonatomic, strong) NSTimer *timerToStart;
 @property (nonatomic, assign) NSInteger timeToStart;
 
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *gameID;
 
-@property (nonatomic, strong) NSDictionary *play;
+//@property (nonatomic, strong) NSDictionary *play;
 
 @end
 
@@ -64,16 +65,18 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"playGameSegue"]) {
-        ((IQGameViewController *)segue.destinationViewController).play = self.play;
-    }
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
+//    if ([segue.identifier isEqualToString:@"playGameSegue"]) {
+//        ((IQGameViewController *)segue.destinationViewController).play = self.play;
+//    }
+//}
 
 - (void)refreshGame
 {
-    [self performSelectorInBackground:@selector(doRefreshGame) withObject:nil];
+    if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGameLobyViewController class]]) {
+        [self performSelectorInBackground:@selector(doRefreshGame) withObject:nil];
+    }
 }
 
 - (void)doRefreshGame
@@ -125,9 +128,7 @@
                 self.timeToStartLabel.text = [NSString stringWithFormat:@"Game will start in: %d", self.timeToStart];
                 [self performSelector:@selector(updateTimeLabel) withObject:nil afterDelay:1];
             } else {
-                if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGameLobyViewController class]]) {
-                    [self performSelector:@selector(refreshGame) withObject:nil afterDelay:([self.game[@"refresh_interval"] intValue] / 1000)];
-                }
+                [self performSelector:@selector(refreshGame) withObject:nil afterDelay:([self.game[@"refresh_interval"] intValue] / 1000)];
             }
         });
     } else {
@@ -147,9 +148,15 @@
     if (playGameSuccessfull) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[IQSettings sharedInstance] hideHud:self.view];
-            self.play = j;
-            [[IQSettings sharedInstance] LogThis:[NSString stringWithFormat:@"%@", self.play ]];
-            [self performSegueWithIdentifier:@"playGameSegue" sender:nil];
+//            [self performSegueWithIdentifier:@"playGameSegue" sender:nil];
+            
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+            IQGameViewController *gameVC = [storyboard instantiateViewControllerWithIdentifier:@"GameViewController"];
+            gameVC.play = j;
+            NSMutableArray *vsc = [self.navigationController.viewControllers mutableCopy];
+            [vsc removeLastObject];
+            [vsc addObject:gameVC];
+            [self.navigationController setViewControllers:vsc animated:YES];
         });
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];

@@ -214,7 +214,6 @@
 			children = (
 				A419B0891905553900E60374 /* IQAppDelegate.h */,
 				A419B08A1905553900E60374 /* IQAppDelegate.m */,
-				A419B0B5190559C400E60374 /* IQHomeViewController.m */,
 				A419B0D41905783E00E60374 /* Libraries */,
 				A419B0D5190578BA00E60374 /* Services */,
 				A46EE27C190C20A600671907 /* Utilities */,
@@ -274,6 +273,7 @@
 				A474BFD31917C9D200FDCE3C /* IQRegistrationViewController.h */,
 				A474BFD41917C9D200FDCE3C /* IQRegistrationViewController.m */,
 				A419B0B4190559C400E60374 /* IQHomeViewController.h */,
+				A419B0B5190559C400E60374 /* IQHomeViewController.m */,
 				A419B0D919057F5100E60374 /* IQGamesViewController.h */,
 				A419B0DA19057F5100E60374 /* IQGamesViewController.m */,
 				A4BE470A19446510008EC970 /* IQNewGameViewController.h */,

@@ -104,7 +104,6 @@
 
 - (IBAction)chooseNewGameButtonTapped:(id)sender
 {
-//TODO:opravi tuka, move games kontrollera da ne e v nav controlera
     for (UIViewController *vc in self.navigationController.viewControllers) {
         if ([vc isKindOfClass:[IQGamesViewController class]]) {
             [self.navigationController popToViewController:vc animated:YES];

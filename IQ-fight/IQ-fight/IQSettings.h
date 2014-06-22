@@ -32,6 +32,7 @@ typedef enum WSOperation {
 @property (nonatomic,assign) BOOL inDebug;
 @property (nonatomic, strong) NSString *servicesURL;
 @property (nonatomic, strong) IQCurrentUser *currentUser;
+@property (nonatomic, assign) BOOL canRefreshGame;
 + (IQSettings *)sharedInstance;
 
 - (void)LogThis:(NSString *)log, ...;

@@ -76,7 +76,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UyE-RP-Pop" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="60" y="-692"/>
+            <point key="canvasLocation" x="-184" y="-698"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Cz7-JB-0rX">
@@ -141,7 +141,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2DB-eo-p7k" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="60" y="66"/>
+            <point key="canvasLocation" x="-184" y="60"/>
         </scene>
         <!--New Game View Controller - New Game-->
         <scene sceneID="rXr-6p-m3u">
@@ -175,7 +175,7 @@
                                     <action selector="createButtonTapped:" destination="2gp-E6-HQu" eventType="touchUpInside" id="fSj-uD-Imw"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="Adk-UJ-jwp">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="Adk-UJ-jwp">
                                 <rect key="frame" x="20" y="58" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -196,7 +196,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="New Game" id="50V-uZ-jzv"/>
+                    <navigationItem key="navigationItem" title="New Game" id="50V-uZ-jzv">
+                        <barButtonItem key="backBarButtonItem" title=" " id="g9t-aT-Dah"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="gameTypeTextField" destination="Adk-UJ-jwp" id="bMl-nw-7FB"/>
                         <outlet property="nameTextField" destination="agh-cT-gjK" id="PfJ-sk-2vz"/>
@@ -206,7 +208,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GsI-8l-UFd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1670" y="-677"/>
+            <point key="canvasLocation" x="1882" y="-725"/>
         </scene>
         <!--Games View Controller - Join Game-->
         <scene sceneID="wBy-Zt-WHE">
@@ -236,17 +238,20 @@
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="MtL-gf-6WO">
                                                     <rect key="frame" x="20" y="2" width="247" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="People to start" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WdN-gq-PZX">
                                                     <rect key="frame" x="20" y="20" width="247" height="15"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
@@ -264,6 +269,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Join Game" id="Cs9-NZ-VH7">
+                        <barButtonItem key="backBarButtonItem" title=" " id="nXC-40-Pju"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="tog-V9-CgT">
                             <connections>
                                 <action selector="newGameButtonTapped:" destination="82U-eD-vE3" id="kSd-Do-wfR"/>
@@ -278,12 +284,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OkM-iO-6dB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1670" y="60"/>
+            <point key="canvasLocation" x="1340" y="54"/>
         </scene>
         <!--Game Loby View Controller-->
         <scene sceneID="0FH-jL-ryB">
             <objects>
-                <viewController id="lYn-UI-Xng" customClass="IQGameLobyViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GameLobyViewController" id="lYn-UI-Xng" customClass="IQGameLobyViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="W1w-Ow-P56">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -343,7 +349,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="rz1-rZ-nK2"/>
+                    <navigationItem key="navigationItem" id="rz1-rZ-nK2">
+                        <barButtonItem key="backBarButtonItem" title=" " id="QgJ-TL-ExU"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="gameNameLabel" destination="J1s-9r-6mA" id="f6x-Tt-FFu"/>
                         <outlet property="player1Label" destination="yUM-oo-OO4" id="mJy-JM-qQM"/>
@@ -357,7 +365,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="APP-pP-wWo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2202" y="60"/>
+            <point key="canvasLocation" x="2420" y="54"/>
         </scene>
         <!--Result View Controller - Results-->
         <scene sceneID="3T4-5j-Cw3">
@@ -436,7 +444,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Results" id="Kpg-xe-4AO"/>
+                    <navigationItem key="navigationItem" title="Results" id="Kpg-xe-4AO">
+                        <barButtonItem key="backBarButtonItem" title=" " id="SpX-zD-aBt"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="player1Label" destination="zOv-Up-jsX" id="TfT-o1-WwS"/>
                         <outlet property="player2Label" destination="vi9-bd-2e6" id="kgS-Fn-htv"/>
@@ -446,12 +456,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eht-XF-I18" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3249" y="60"/>
+            <point key="canvasLocation" x="3437" y="54"/>
         </scene>
         <!--Game View Controller - Question 10-->
         <scene sceneID="4bx-Yf-4fD">
             <objects>
-                <viewController id="AdP-w4-jkd" customClass="IQGameViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GameViewController" id="AdP-w4-jkd" customClass="IQGameViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sF1-b3-W2D">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -472,9 +482,10 @@
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="3Bz-z9-IHp">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="3Bz-z9-IHp">
                                         <rect key="frame" x="10" y="146" width="300" height="140"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time left: 60" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4L7-gb-bO2">
                                         <rect key="frame" x="164" y="45" width="146" height="21"/>
@@ -507,10 +518,10 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="JK5-UC-cG2">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="JK5-UC-cG2">
                                         <rect key="frame" x="10" y="290" width="148" height="82"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="raB-4h-qnR">
                                         <rect key="frame" x="10" y="290" width="148" height="82"/>
@@ -525,10 +536,10 @@
                                             <action selector="answerButtonTapped:" destination="AdP-w4-jkd" eventType="touchUpInside" id="HFT-bl-owv"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="SYx-20-8ds">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="SYx-20-8ds">
                                         <rect key="frame" x="162" y="290" width="148" height="82"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="hsZ-9b-Z89">
                                         <rect key="frame" x="162" y="290" width="148" height="82"/>
@@ -543,10 +554,10 @@
                                             <action selector="answerButtonTapped:" destination="AdP-w4-jkd" eventType="touchUpInside" id="Tf1-qX-8xJ"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="eIs-gT-FCC">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="eIs-gT-FCC">
                                         <rect key="frame" x="10" y="376" width="148" height="82"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="456-58-bsK">
                                         <rect key="frame" x="10" y="376" width="148" height="82"/>
@@ -561,10 +572,10 @@
                                             <action selector="answerButtonTapped:" destination="AdP-w4-jkd" eventType="touchUpInside" id="5Ry-YK-Msd"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Vfu-f7-D1i">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Vfu-f7-D1i">
                                         <rect key="frame" x="162" y="376" width="148" height="82"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="RbI-RX-yBz">
                                         <rect key="frame" x="162" y="376" width="148" height="82"/>
@@ -591,7 +602,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Question 10" id="Y6h-uY-nq9"/>
+                    <navigationItem key="navigationItem" title="Question 10" id="Y6h-uY-nq9">
+                        <barButtonItem key="backBarButtonItem" title=" " id="jUa-Wy-2Gk"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="answer1Button" destination="raB-4h-qnR" id="gfK-g1-hYc"/>
                         <outlet property="answer1ImageView" destination="JK5-UC-cG2" id="pBY-XX-AL5"/>
@@ -613,7 +626,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4MK-Qc-raz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2722" y="60"/>
+            <point key="canvasLocation" x="2910" y="54"/>
         </scene>
         <!--Home View Controller - Username-->
         <scene sceneID="x0S-ix-jfC">
@@ -628,7 +641,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NgT-Lk-Suw">
-                                <rect key="frame" x="20" y="61" width="280" height="33"/>
+                                <rect key="frame" x="20" y="20" width="280" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Join game">
@@ -638,21 +651,11 @@
                                     <action selector="joinGameButtonTapped:" destination="fSE-FT-iNM" eventType="touchUpInside" id="ob3-it-2bC"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="La4-KF-OlI">
-                                <rect key="frame" x="20" y="20" width="280" height="33"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="New game">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="newGameButtonTapped:" destination="fSE-FT-iNM" eventType="touchUpInside" id="1qQ-j7-zrF"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Username" id="Te3-Wz-Kzt">
+                        <barButtonItem key="backBarButtonItem" title=" " id="2tt-7P-r1g"/>
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="pr1-DR-rF1">
                             <connections>
                                 <action selector="logoutButtonTapped:" destination="fSE-FT-iNM" id="cqS-Y4-lEA"/>
@@ -665,7 +668,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9dW-wQ-sMv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1121" y="60"/>
+            <point key="canvasLocation" x="877" y="54"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hMr-DL-zsY">
@@ -684,7 +687,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zL0-pz-tto" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="595" y="60"/>
+            <point key="canvasLocation" x="351" y="54"/>
         </scene>
     </scenes>
     <resources>

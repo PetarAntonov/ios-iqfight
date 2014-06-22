@@ -12,6 +12,7 @@
 #import "IQSettings.h"
 #import "UITextView+convertSizeToFit.h"
 #import "IQHomeViewController.h"
+#import "IQGamesViewController.h"
 
 @interface IQGameViewController () <DataServiceDelegate>
 
@@ -69,7 +70,9 @@
 
 - (void)refreshQuestion
 {
-    [self performSelectorInBackground:@selector(doRefreshQuestion) withObject:nil];
+    if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGameViewController class]]) {
+        [self performSelectorInBackground:@selector(doRefreshQuestion) withObject:nil];
+    }
 }
 
 - (void)doRefreshQuestion
@@ -123,11 +126,11 @@
             [self performSelector:@selector(refreshQuestion) withObject:nil afterDelay:1.0];
         });
     } else {
-        if ([j[@"error_message"] isEqualToString:@"Game over"]) {
-            [self performSegueWithIdentifier:@"resultSegue" sender:nil];
-        } else {
+//        if ([j[@"error_message"] isEqualToString:@"Game over"]) {
+//            [self performSegueWithIdentifier:@"resultSegue" sender:nil];
+//        } else {
             [self dataServiceError:self errorMessage:j[@"error_message"]];
-        }
+//        }
     }
 }
 
@@ -155,6 +158,10 @@
 {
     UIButton *button = (UIButton *)sender;
     [self enableButtons:NO];
+    
+    button.layer.borderWidth = 2.0;
+    button.layer.borderColor = [UIColor blueColor].CGColor;
+    
     [self performSelectorInBackground:@selector(doAnswer:) withObject:button];
 }
 
@@ -247,34 +254,42 @@
         if ([answers[0][@"picture"] isEqualToString:@""]) {
             [self.answer1Button setTitle:answers[0][@"answer"] forState:UIControlStateNormal];
             self.answer1ImageView.image = nil;
+            self.answer1ImageView.hidden = YES;
         } else {
             [self.answer1Button setTitle:@"" forState:UIControlStateNormal];
             NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[0][@"picture"]];
             [self.answer1ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
+            self.answer1ImageView.hidden = NO;
         }
         if ([answers[1][@"picture"] isEqualToString:@""]) {
             [self.answer2Button setTitle:answers[1][@"answer"] forState:UIControlStateNormal];
             self.answer2ImageView.image = nil;
+            self.answer2ImageView.hidden = YES;
         } else {
             [self.answer2Button setTitle:@"" forState:UIControlStateNormal];
             NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[1][@"picture"]];
             [self.answer2ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
+            self.answer2ImageView.hidden = NO;
         }
         if ([answers[2][@"picture"] isEqualToString:@""]) {
             [self.answer3Button setTitle:answers[2][@"answer"] forState:UIControlStateNormal];
             self.answer3ImageView.image = nil;
+            self.answer3ImageView.hidden = YES;
         } else {
             [self.answer3Button setTitle:@"" forState:UIControlStateNormal];
             NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[2][@"picture"]];
             [self.answer3ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
+            self.answer3ImageView.hidden = NO;
         }
         if ([answers[3][@"picture"] isEqualToString:@""]) {
             [self.answer4Button setTitle:answers[3][@"answer"] forState:UIControlStateNormal];
             self.answer4ImageView.image = nil;
+            self.answer4ImageView.hidden = YES;
         } else {
             [self.answer4Button setTitle:@"" forState:UIControlStateNormal];
             NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[3][@"picture"]];
             [self.answer4ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
+            self.answer4ImageView.hidden = NO;
         }
         
         self.answer1Button.tag = [answers[0][@"id"] intValue];
@@ -317,6 +332,11 @@
     self.answer2Button.enabled = enable;
     self.answer3Button.enabled = enable;
     self.answer4Button.enabled = enable;
+    
+    self.answer1Button.layer.borderWidth = 0;
+    self.answer2Button.layer.borderWidth = 0;
+    self.answer3Button.layer.borderWidth = 0;
+    self.answer4Button.layer.borderWidth = 0;
 }
 
 @end

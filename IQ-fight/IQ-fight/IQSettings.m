@@ -58,6 +58,8 @@
         self.servicesURL = @"http://iqfight.empters.com";
         
         self.currentUser = [[IQCurrentUser alloc] init];
+        
+        self.canRefreshGame = YES;
     }
     
     return self;

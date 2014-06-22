@@ -10,6 +10,7 @@
 #import "IQSettings.h"
 #import "DataService.h"
 #import "IQGameLobyViewController.h"
+#import "IQGameLobyViewController.h"
 
 @interface IQNewGameViewController () <DataServiceDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
@@ -19,7 +20,6 @@
 
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *gameID;
-@property (nonatomic, strong) NSMutableDictionary *game;
 @property (nonatomic, strong) NSArray *types;
 @property (nonatomic, assign) int ddRow;
 
@@ -39,8 +39,7 @@
 {
     [super viewDidLoad];
     
-    self.game = [@{} mutableCopy];
-    self.types = @[@"Short 5 questions", @"Standart 10 questions", @"Long - 15 questions"];
+    self.types = @[@"Short - 5 questions", @"Standart - 10 questions", @"Long - 15 questions"];
     self.ddRow = 1;
     self.gameTypeTextField.text = self.types[1];
     [self setupPickerView];
@@ -49,13 +48,6 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"openGameSegue"]) {
-        ((IQGameLobyViewController *)segue.destinationViewController).game = self.game;
-    }
 }
 
 #pragma mark - Action Methods
@@ -153,11 +145,18 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [[IQSettings sharedInstance] hideHud:self.view];
             
-            self.game = [j mutableCopy];
-            [self.game setValue:self.gameID forKey:@"id"];
-            [self.game setValue:self.gameName forKey:@"name"];
+            NSMutableDictionary *game = [j mutableCopy];
+            [game setValue:self.gameID forKey:@"id"];
+            [game setValue:self.gameName forKey:@"name"];
             
-            [self performSegueWithIdentifier:@"openGameSegue" sender:nil];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+            IQGameLobyViewController *gameLoby = [storyboard instantiateViewControllerWithIdentifier:@"GameLobyViewController"];
+            gameLoby.game = game;
+            NSMutableArray *vsc = [self.navigationController.viewControllers mutableCopy];
+            [vsc removeLastObject];
+            [vsc addObject:gameLoby];
+            [self.navigationController setViewControllers:vsc animated:YES];
+            
         });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -56,11 +56,6 @@
 
 #pragma mark - Action Methods
 
-- (IBAction)newGameButtonTapped:(id)sender
-{
-    [self performSegueWithIdentifier:@"newGameSegue" sender:nil];
-}
-
 - (IBAction)logoutButtonTapped:(id)sender
 {
     self.isLogout = YES;

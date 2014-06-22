@@ -72,7 +72,7 @@
 
 - (IBAction)newGameButtonTapped:(id)sender
 {
-    
+    [self performSegueWithIdentifier:@"newGameSegue" sender:nil];
 }
 
 
@@ -117,7 +117,9 @@
 
 - (void)refreshGames
 {
-    [self performSelectorInBackground:@selector(doGetGames) withObject:nil];
+    if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGamesViewController class]]) {
+        [self performSelectorInBackground:@selector(doGetGames) withObject:nil];
+    }
 }
 
 - (void)openGame
@@ -196,9 +198,8 @@
             [[IQSettings sharedInstance] hideHud:self.view];
             
             [self.tableView reloadData];
-            if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGamesViewController class]]) {
-                [self performSelector:@selector(refreshGames) withObject:nil afterDelay:([self.games[@"refresh_interval"] intValue] / 1000)];
-            }
+            
+            [self performSelector:@selector(refreshGames) withObject:nil afterDelay:([self.games[@"refresh_interval"] intValue] / 1000)];
         });
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
