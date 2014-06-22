@@ -165,20 +165,48 @@
 //trqbva da polucha nomer na vaprosa
     //self.title = self.play[@""];
     
+    NSMutableArray *points = [@[] mutableCopy];
     if ([self.play[@"users"] count] > 0 && ![self.play[@"users"][0][@"name"] isEqualToString:@""]) {
         self.player1Label.text = [NSString stringWithFormat:@"%@: %@", self.play[@"users"][0][@"name"], self.play[@"users"][0][@"points"]];
+        [points addObject:@([self.play[@"users"][0][@"points"] intValue])];
     } else {
         self.player1Label.text = @"";
     }
     if ([self.play[@"users"] count] > 1 && ![self.play[@"users"][1][@"name"] isEqualToString:@""]) {
         self.player2Label.text = [NSString stringWithFormat:@"%@: %@", self.play[@"users"][1][@"name"], self.play[@"users"][1][@"points"]];
+        [points addObject:@([self.play[@"users"][0][@"points"] intValue])];
     } else {
         self.player2Label.text = @"";
     }
     if ([self.play[@"users"] count] > 2 && ![self.play[@"users"][2][@"name"] isEqualToString:@""]) {
         self.player3Label.text = [NSString stringWithFormat:@"%@: %@", self.play[@"users"][2][@"name"], self.play[@"users"][2][@"points"]];
+        [points addObject:@([self.play[@"users"][0][@"points"] intValue])];
     } else {
         self.player3Label.text = @"";
+    }
+    
+    NSNumber *max = [points valueForKeyPath:@"@max.intValue"];
+    if ([max intValue] > 0) {
+        int index = [points indexOfObject:max];
+        switch (index) {
+            case 0:
+                self.player1Label.textColor = [UIColor greenColor];
+                self.player2Label.textColor = [UIColor redColor];
+                self.player3Label.textColor = [UIColor redColor];
+                break;
+            case 1:
+                self.player2Label.textColor = [UIColor greenColor];
+                self.player1Label.textColor = [UIColor redColor];
+                self.player3Label.textColor = [UIColor redColor];
+                break;
+            case 2:
+                self.player3Label.textColor = [UIColor greenColor];
+                self.player2Label.textColor = [UIColor redColor];
+                self.player1Label.textColor = [UIColor redColor];
+                break;
+            default:
+                break;
+        }
     }
     
     self.timeLeftLabel.text = [NSString stringWithFormat:@"Time left: %d", ([self.play[@"remaing_time"] intValue] / 1000)];

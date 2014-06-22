@@ -263,10 +263,17 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Join Game" id="Cs9-NZ-VH7"/>
+                    <navigationItem key="navigationItem" title="Join Game" id="Cs9-NZ-VH7">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="tog-V9-CgT">
+                            <connections>
+                                <action selector="newGameButtonTapped:" destination="82U-eD-vE3" id="kSd-Do-wfR"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="CCF-JV-4lF" id="7Ao-OT-KEl"/>
                         <segue destination="lYn-UI-Xng" kind="push" identifier="gameLobySegue" id="aRw-98-1mO"/>
+                        <segue destination="2gp-E6-HQu" kind="push" identifier="newGameSegue" id="Nf0-tn-CZD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OkM-iO-6dB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -654,7 +661,6 @@
                     </navigationItem>
                     <connections>
                         <segue destination="82U-eD-vE3" kind="push" identifier="gamesSegue" id="Q1V-jb-qga"/>
-                        <segue destination="2gp-E6-HQu" kind="push" identifier="newGameSegue" id="kf1-Dy-kwl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9dW-wQ-sMv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -690,6 +696,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="87q-kL-Dgf"/>
+        <segue reference="aRw-98-1mO"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -138,6 +138,10 @@
     } else {
         self.player3Label.text = @"";
     }
+    
+    self.player1Label.textColor = [UIColor greenColor];
+    self.player2Label.textColor = [UIColor redColor];
+    self.player3Label.textColor = [UIColor redColor];
 }
 
 @end

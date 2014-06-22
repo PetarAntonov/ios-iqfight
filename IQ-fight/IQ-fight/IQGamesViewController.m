@@ -12,7 +12,7 @@
 #import "IQGameLobyViewController.h"
 #import "DataService.h"
 
-@interface IQGamesViewController () <DataServiceDelegate>
+@interface IQGamesViewController () <DataServiceDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -68,6 +68,14 @@
     }
 }
 
+#pragma mark - Action Methods
+
+- (IBAction)newGameButtonTapped:(id)sender
+{
+    
+}
+
+
 #pragma mark - Table Delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -87,10 +95,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.gameID = self.games[@"games"][indexPath.row][@"id"];
     self.gameName = self.games[@"games"][indexPath.row][@"name"];
-    [self openGame];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if ([self.games[@"games"][indexPath.row][@"password"] isEqualToString:@""] || self.games[@"games"][indexPath.row][@"password"] == nil) {
+        [self openGame];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Private game!" message:@"Enter password to join" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Enter", nil];
+        alert.alertViewStyle = UIAlertViewStyleSecureTextInput;
+        [alert show];
+    }
 }
 
 #pragma mark - Private Methods
@@ -239,6 +254,26 @@
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:button otherButtonTitles:nil];
     [alert show];
+}
+
+#pragma mark - Alert Delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    UITextField * alertTextField = [alertView textFieldAtIndex:0];
+    if (buttonIndex == 1) {
+        for (NSDictionary *game in self.games[@"games"]) {
+            if ([game[@"name"] isEqualToString:self.gameName]) {
+                if ([alertTextField.text isEqualToString:game[@"password"]]) {
+                    [self openGame];
+                } else {
+                    [self showAlertWithTitle:@"Error" message:@"Wrong password!" cancelButton:@"OK"];
+                }
+                break;
+            }
+        }
+    }
 }
 
 @end

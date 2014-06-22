@@ -94,13 +94,6 @@
     [dService playGame];
 }
 
-- (void)doQuitGame
-{
-    DataService *dService = [[DataService alloc] init];
-    dService.delegate = self;
-    [dService quitGame];
-}
-
 #pragma mark - Service delegates
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
