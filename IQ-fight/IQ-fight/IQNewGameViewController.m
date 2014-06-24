@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *gameTypeTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (weak, nonatomic) IBOutlet UIButton *createButton;
 
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *gameID;
@@ -42,6 +43,16 @@
     self.types = @[@"Short - 5 questions", @"Standart - 10 questions", @"Long - 15 questions"];
     self.ddRow = 1;
     self.gameTypeTextField.text = self.types[1];
+    self.gameTypeTextField.tag = 1;
+    
+    self.nameTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
+    self.gameTypeTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
+    self.passwordTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
+    self.createButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
+    
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                                                      NSFontAttributeName :[UIFont boldSystemFontOfSize:20.0]}];
+    
     [self setupPickerView];
 }
 
@@ -175,6 +186,15 @@
     return YES;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (textField.tag == 1) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 #pragma mark - Picker view delegates
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
@@ -210,8 +230,10 @@
     [pickerView setDataSource:self];
     [pickerView setShowsSelectionIndicator:YES];
     [pickerView selectRow:self.ddRow inComponent:0 animated:YES];
-    [pickerView setBackgroundColor:[UIColor whiteColor]];
+    pickerView.backgroundColor = [UIColor clearColor];
     [self.gameTypeTextField setInputView:pickerView];
+    self.gameTypeTextField.inputView.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
+    self.gameTypeTextField.inputView.backgroundColor = [UIColor clearColor];
     
     UIBarButtonItem *itemSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     

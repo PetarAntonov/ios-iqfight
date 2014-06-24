@@ -183,19 +183,19 @@
     if ([self.game[@"users"] count] > 0 && ![self.game[@"users"][0] isEqualToString:@""]) {
         self.player1Label.text = self.game[@"users"][0];
     } else {
-        self.player1Label.text = @"Waiting for player 1.";
+        self.player1Label.text = @"Waiting for player 1...";
     }
     
     if ([self.game[@"users"] count] > 1 && ![self.game[@"users"][1] isEqualToString:@""]) {
         self.player2Label.text = self.game[@"users"][1];
     } else {
-        self.player2Label.text = @"Waiting for player 2.";
+        self.player2Label.text = @"Waiting for player 2...";
     }
     
     if ([self.game[@"users"] count] > 2 && ![self.game[@"users"][2] isEqualToString:@""]) {
         self.player3Label.text = self.game[@"users"][2];
     } else {
-        self.player3Label.text = @"Waiting for player 3.";
+        self.player3Label.text = @"Waiting for player 3...";
     }
 }
 

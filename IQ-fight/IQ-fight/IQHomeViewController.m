@@ -13,6 +13,8 @@
 #import "IQGamesViewController.h"
 
 @interface IQHomeViewController () <DataServiceDelegate>
+@property (weak, nonatomic) IBOutlet UIButton *logoutButton;
+@property (weak, nonatomic) IBOutlet UIButton *joinGameButton;
 
 @property (nonatomic, strong) NSDictionary *games;
 @property (nonatomic, assign) BOOL isLogout;
@@ -40,6 +42,13 @@
     
     self.isLogout = NO;
     self.title = [IQSettings sharedInstance].currentUser.username;
+    
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                                                      NSFontAttributeName :[UIFont boldSystemFontOfSize:20.0]}];
+    
+    self.logoutButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
+    self.joinGameButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
+    
 }
 
 - (void)didReceiveMemoryWarning

@@ -17,6 +17,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UITextField *repeatPasswordTextField;
+@property (weak, nonatomic) IBOutlet UIButton *registerButton;
+@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 
 @property (nonatomic, strong) NSDictionary *test;
 
@@ -35,6 +37,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.usernameTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
+    self.passwordTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
+    self.repeatPasswordTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
+    self.registerButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
+    self.cancelButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
 }
 
 - (void)didReceiveMemoryWarning

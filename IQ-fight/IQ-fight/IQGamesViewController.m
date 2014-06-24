@@ -53,6 +53,12 @@
 {
     [super viewWillAppear:animated];
     
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                                                      NSFontAttributeName :[UIFont boldSystemFontOfSize:20.0]}];
+    
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundView = nil;
+    
     [self quitGames];
 }
 
@@ -80,15 +86,32 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.games[@"games"] count];
+    if (self.games[@"games"] == nil || [self.games[@"games"] count] < 1) {
+        return 1;
+    } else {
+        return [self.games[@"games"] count];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     IQGameTableViewCell *cell = (IQGameTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"gameCell" forIndexPath:indexPath];
     
-    cell.gameLabel.text = self.games[@"games"][indexPath.row][@"name"];
-    cell.playersToStartLabel.text = [NSString stringWithFormat:@"Players to start: %@", self.games[@"games"][indexPath.row][@"players_to_start"]];
+    if (self.games[@"games"] == nil || [self.games[@"games"] count] < 1) {
+        cell.gameLabel.text = @"No games available";
+        cell.playersToStartLabel.text = @"";
+        
+        cell.userInteractionEnabled = NO;
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    } else {
+        cell.gameLabel.text = self.games[@"games"][indexPath.row][@"name"];
+        cell.playersToStartLabel.text = [NSString stringWithFormat:@"Players to start: %@", self.games[@"games"][indexPath.row][@"players_to_start"]];
+        cell.userInteractionEnabled = YES;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    cell.gameLabel.textColor = [UIColor whiteColor];
+    cell.playersToStartLabel.textColor = [UIColor whiteColor];
     
     return cell;
 }
@@ -106,6 +129,13 @@
         alert.alertViewStyle = UIAlertViewStyleSecureTextInput;
         [alert show];
     }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UIView *backView = [[UIView alloc] initWithFrame:CGRectZero];
+    backView.backgroundColor = [UIColor clearColor];
+    cell.backgroundView = backView;
 }
 
 #pragma mark - Private Methods

@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
+@property (weak, nonatomic) IBOutlet UIButton *regButton;
 
 @property (nonatomic, strong) NSDictionary *test;
 
@@ -40,6 +41,11 @@
         self.usernameTextField.text = @"peshotest@abv.bg";
         self.passwordTextField.text = @"123456";
     }
+    
+    self.usernameTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
+    self.passwordTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
+    self.regButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
+    self.loginButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
 }
 
 - (void)didReceiveMemoryWarning
