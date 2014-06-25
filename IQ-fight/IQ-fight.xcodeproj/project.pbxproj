@@ -137,6 +137,8 @@
 		A474BFD71917D00800FDCE3C /* NSString+RegularExpressions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RegularExpressions.m"; sourceTree = "<group>"; };
 		A474BFD91918283E00FDCE3C /* IQResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQResultViewController.h; sourceTree = "<group>"; };
 		A474BFDA1918283E00FDCE3C /* IQResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQResultViewController.m; sourceTree = "<group>"; };
+		A47FF58A195B470300499E1C /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
+		A47FF58B195B470300499E1C /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 		A4BE470A19446510008EC970 /* IQNewGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQNewGameViewController.h; sourceTree = "<group>"; };
 		A4BE470B19446510008EC970 /* IQNewGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQNewGameViewController.m; sourceTree = "<group>"; };
 		A4CC7A0A194E214B00E8F2B2 /* UITextView+convertSizeToFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+convertSizeToFit.h"; sourceTree = "<group>"; };
@@ -174,6 +176,8 @@
 			children = (
 				A41DBA8A1947509D00D6CB62 /* Responses.rtf */,
 				A4111D081920D740002B8E52 /* background.png */,
+				A47FF58A195B470300499E1C /* iTunesArtwork */,
+				A47FF58B195B470300499E1C /* iTunesArtwork@2x */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
