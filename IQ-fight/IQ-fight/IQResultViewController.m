@@ -17,6 +17,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *player1Label;
 @property (weak, nonatomic) IBOutlet UILabel *player2Label;
 @property (weak, nonatomic) IBOutlet UILabel *player3Label;
+@property (weak, nonatomic) IBOutlet UIButton *homeButton;
+@property (weak, nonatomic) IBOutlet UIButton *gamesButton;
 
 @property (nonatomic, strong) NSDictionary *result;
 
@@ -36,7 +38,16 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Result";
+    self.title = @"Results";
+    
+    self.result = @{@"users":@[@{@"name":@"peshotest@abv.bg",
+                                 @"points":@"3"},
+                               @{@"name":@"peshotest1@abv.bg",
+                                 @"points":@"2"},
+                               @{@"name":@"peshotest3@abv.bg",
+                                 @"points":@"0"}]};
+    
+    [self updateUI];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -45,7 +56,7 @@
     
     self.navigationItem.hidesBackButton = YES;
     
-    [self performSelectorInBackground:@selector(doShowResult) withObject:nil];
+//    [self performSelectorInBackground:@selector(doShowResult) withObject:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -137,10 +148,6 @@
     } else {
         self.player3Label.text = @"";
     }
-    
-    self.player1Label.textColor = [UIColor greenColor];
-    self.player2Label.textColor = [UIColor redColor];
-    self.player3Label.textColor = [UIColor redColor];
 }
 
 @end

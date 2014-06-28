@@ -37,12 +37,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.usernameTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
-    self.passwordTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
-    self.repeatPasswordTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
-    self.registerButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
-    self.cancelButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
 }
 
 - (void)didReceiveMemoryWarning

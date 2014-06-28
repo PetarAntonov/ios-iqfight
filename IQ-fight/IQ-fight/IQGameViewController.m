@@ -13,9 +13,11 @@
 #import "UITextView+convertSizeToFit.h"
 #import "IQHomeViewController.h"
 #import "IQGamesViewController.h"
+#import "TPKeyboardAvoidingScrollView.h"
 
 @interface IQGameViewController () <DataServiceDelegate>
 
+@property (weak, nonatomic) IBOutlet TPKeyboardAvoidingScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UILabel *player1Label;
 @property (weak, nonatomic) IBOutlet UILabel *player2Label;
 @property (weak, nonatomic) IBOutlet UILabel *player3Label;
@@ -47,6 +49,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.questionTextView.selectable = NO;
     
     [self refreshQuestion];
 }
@@ -156,11 +160,20 @@
 
 - (IBAction)answerButtonTapped:(id)sender
 {
+//    [self performSegueWithIdentifier:@"resultSegue" sender:nil];
+    
     UIButton *button = (UIButton *)sender;
     [self enableButtons:NO];
     
     button.layer.borderWidth = 2.0;
-    button.layer.borderColor = [UIColor blueColor].CGColor;
+    button.layer.borderColor = [UIColor colorWithRed:102/255.0 green:204/255.0 blue:255/255.0 alpha:1].CGColor;
+    
+    for (UIView *subview in self.scrollView.subviews) {
+        if (subview.tag == button.tag) {
+            ((UIImageView *)subview).layer.borderWidth = 2.0;
+            ((UIImageView *)subview).layer.borderColor = [UIColor colorWithRed:102/255.0 green:204/255.0 blue:255/255.0 alpha:1].CGColor;
+        }
+    }
     
     [self performSelectorInBackground:@selector(doAnswer:) withObject:button];
 }
@@ -219,7 +232,6 @@
     self.timeLeftLabel.text = [NSString stringWithFormat:@"Time left: %d", ([self.play[@"remaing_time"] intValue] / 1000)];
     
     self.questionTextView.text = self.play[@"question"][@"question"];
-    self.questionTextView.font = [UIFont boldSystemFontOfSize:14.0];
     [self.questionTextView convertSizeToFit];
     
     if ([self.play[@"question"][@"picture"] isEqualToString:@""] || self.play[@"question"][@"picture"] == nil) {
@@ -252,40 +264,48 @@
     if (self.play[@"answers"] != nil && [self.play[@"answers"] count] > 0) {
         NSArray *answers = self.play[@"answers"];
         if ([answers[0][@"picture"] isEqualToString:@""]) {
+            self.answer1Button.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.4];
             [self.answer1Button setTitle:answers[0][@"answer"] forState:UIControlStateNormal];
             self.answer1ImageView.image = nil;
             self.answer1ImageView.hidden = YES;
         } else {
+            self.answer1Button.backgroundColor = [UIColor clearColor];
             [self.answer1Button setTitle:@"" forState:UIControlStateNormal];
             NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[0][@"picture"]];
             [self.answer1ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
             self.answer1ImageView.hidden = NO;
         }
         if ([answers[1][@"picture"] isEqualToString:@""]) {
+            self.answer2Button.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.4];
             [self.answer2Button setTitle:answers[1][@"answer"] forState:UIControlStateNormal];
             self.answer2ImageView.image = nil;
             self.answer2ImageView.hidden = YES;
         } else {
+            self.answer2Button.backgroundColor = [UIColor clearColor];
             [self.answer2Button setTitle:@"" forState:UIControlStateNormal];
             NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[1][@"picture"]];
             [self.answer2ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
             self.answer2ImageView.hidden = NO;
         }
         if ([answers[2][@"picture"] isEqualToString:@""]) {
+            self.answer3Button.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.4];
             [self.answer3Button setTitle:answers[2][@"answer"] forState:UIControlStateNormal];
             self.answer3ImageView.image = nil;
             self.answer3ImageView.hidden = YES;
         } else {
+            self.answer3Button.backgroundColor = [UIColor clearColor];
             [self.answer3Button setTitle:@"" forState:UIControlStateNormal];
             NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[2][@"picture"]];
             [self.answer3ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
             self.answer3ImageView.hidden = NO;
         }
         if ([answers[3][@"picture"] isEqualToString:@""]) {
+            self.answer4Button.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.4];
             [self.answer4Button setTitle:answers[3][@"answer"] forState:UIControlStateNormal];
             self.answer4ImageView.image = nil;
             self.answer4ImageView.hidden = YES;
         } else {
+            self.answer4Button.backgroundColor = [UIColor clearColor];
             [self.answer4Button setTitle:@"" forState:UIControlStateNormal];
             NSString *answerURLString = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, answers[3][@"picture"]];
             [self.answer4ImageView setImageWithURL:[NSURL URLWithString:answerURLString]];
@@ -296,6 +316,10 @@
         self.answer2Button.tag = [answers[1][@"id"] intValue];
         self.answer3Button.tag = [answers[2][@"id"] intValue];
         self.answer4Button.tag = [answers[3][@"id"] intValue];
+        self.answer1ImageView.tag = [answers[0][@"id"] intValue];
+        self.answer2ImageView.tag = [answers[1][@"id"] intValue];
+        self.answer3ImageView.tag = [answers[2][@"id"] intValue];
+        self.answer4ImageView.tag = [answers[3][@"id"] intValue];
     }
     
 //trqbva mi nomera na vaprosa
@@ -337,6 +361,11 @@
     self.answer2Button.layer.borderWidth = 0;
     self.answer3Button.layer.borderWidth = 0;
     self.answer4Button.layer.borderWidth = 0;
+    
+    self.answer1ImageView.layer.borderWidth = 0;
+    self.answer2ImageView.layer.borderWidth = 0;
+    self.answer3ImageView.layer.borderWidth = 0;
+    self.answer4ImageView.layer.borderWidth = 0;
 }
 
 @end

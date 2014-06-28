@@ -53,9 +53,6 @@
 {
     [super viewWillAppear:animated];
     
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor],
-                                                                      NSFontAttributeName :[UIFont boldSystemFontOfSize:20.0]}];
-    
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.backgroundView = nil;
     

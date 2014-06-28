@@ -22,14 +22,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeToStartLabel;
 @property (weak, nonatomic) IBOutlet UILabel *gameNameLabel;
 
-//@property (nonatomic, strong) NSTimer *timer;
-//@property (nonatomic, strong) NSTimer *timerToStart;
 @property (nonatomic, assign) NSInteger timeToStart;
 
 @property (nonatomic, strong) NSString *gameName;
 @property (nonatomic, strong) NSString *gameID;
-
-//@property (nonatomic, strong) NSDictionary *play;
 
 @end
 
@@ -64,13 +60,6 @@
 {
     [super didReceiveMemoryWarning];
 }
-
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-//{
-//    if ([segue.identifier isEqualToString:@"playGameSegue"]) {
-//        ((IQGameViewController *)segue.destinationViewController).play = self.play;
-//    }
-//}
 
 - (void)refreshGame
 {
@@ -148,7 +137,6 @@
     if (playGameSuccessfull) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[IQSettings sharedInstance] hideHud:self.view];
-//            [self performSegueWithIdentifier:@"playGameSegue" sender:nil];
             
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
             IQGameViewController *gameVC = [storyboard instantiateViewControllerWithIdentifier:@"GameViewController"];

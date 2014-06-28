@@ -7,7 +7,6 @@
 //
 
 #import "IQAppDelegate.h"
-#import "IQServerCommunication.h"
 #import "IQSettings.h"
 #import "DataService.h"
 
@@ -30,6 +29,9 @@
     [[UINavigationBar appearance] setBackgroundImage:navBackgroundImage forBarMetrics:UIBarMetricsDefault];
     [[UIToolbar appearance] setBackgroundImage:navBackgroundImage forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName :[UIColor whiteColor],
+                                                           NSFontAttributeName :[UIFont boldSystemFontOfSize:20.0]}];
     
     [self setCookie];
     

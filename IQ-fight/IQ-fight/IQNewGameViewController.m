@@ -45,14 +45,6 @@
     self.gameTypeTextField.text = self.types[1];
     self.gameTypeTextField.tag = 1;
     
-    self.nameTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
-    self.gameTypeTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
-    self.passwordTextField.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.3];
-    self.createButton.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
-    
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor],
-                                                                      NSFontAttributeName :[UIFont boldSystemFontOfSize:20.0]}];
-    
     [self setupPickerView];
 }
 
@@ -232,7 +224,7 @@
     [pickerView selectRow:self.ddRow inComponent:0 animated:YES];
     pickerView.backgroundColor = [UIColor clearColor];
     [self.gameTypeTextField setInputView:pickerView];
-    self.gameTypeTextField.inputView.backgroundColor = [UIColor colorWithRed:255 green:255 blue:255 alpha:0.2];
+    self.gameTypeTextField.inputView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.3];
     self.gameTypeTextField.inputView.backgroundColor = [UIColor clearColor];
     
     UIBarButtonItem *itemSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A4111D091920D740002B8E52 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = A4111D081920D740002B8E52 /* background.png */; };
 		A419B0791905553900E60374 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419B0781905553900E60374 /* Foundation.framework */; };
 		A419B07B1905553900E60374 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419B07A1905553900E60374 /* CoreGraphics.framework */; };
 		A419B07D1905553900E60374 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419B07C1905553900E60374 /* UIKit.framework */; };
@@ -52,6 +51,8 @@
 		A474BFDB1918283E00FDCE3C /* IQResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A474BFDA1918283E00FDCE3C /* IQResultViewController.m */; };
 		A4BE470C19446510008EC970 /* IQNewGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BE470B19446510008EC970 /* IQNewGameViewController.m */; };
 		A4CC7A0C194E214B00E8F2B2 /* UITextView+convertSizeToFit.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC7A0B194E214B00E8F2B2 /* UITextView+convertSizeToFit.m */; };
+		A4DB619B195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A4DB6198195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.m */; };
+		A4DB619C195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = A4DB619A195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,7 +66,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A4111D081920D740002B8E52 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		A419B0751905553900E60374 /* IQ-fight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IQ-fight.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A419B0781905553900E60374 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A419B07A1905553900E60374 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -143,6 +143,10 @@
 		A4BE470B19446510008EC970 /* IQNewGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQNewGameViewController.m; sourceTree = "<group>"; };
 		A4CC7A0A194E214B00E8F2B2 /* UITextView+convertSizeToFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+convertSizeToFit.h"; sourceTree = "<group>"; };
 		A4CC7A0B194E214B00E8F2B2 /* UITextView+convertSizeToFit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+convertSizeToFit.m"; sourceTree = "<group>"; };
+		A4DB6197195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
+		A4DB6198195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
+		A4DB6199195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
+		A4DB619A195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,7 +179,6 @@
 			isa = PBXGroup;
 			children = (
 				A41DBA8A1947509D00D6CB62 /* Responses.rtf */,
-				A4111D081920D740002B8E52 /* background.png */,
 				A47FF58A195B470300499E1C /* iTunesArtwork */,
 				A47FF58B195B470300499E1C /* iTunesArtwork@2x */,
 			);
@@ -323,6 +326,7 @@
 			children = (
 				A46EE283190C212300671907 /* MBProgressHUD */,
 				A419B0B71905783900E60374 /* AFNetworking */,
+				A4DB619D195EC0B3005C6E3C /* TPKeyboardAvoidingScrollView */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -374,6 +378,17 @@
 			);
 			name = MBProgressHUD;
 			path = AFNetworking;
+			sourceTree = "<group>";
+		};
+		A4DB619D195EC0B3005C6E3C /* TPKeyboardAvoidingScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				A4DB6197195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.h */,
+				A4DB6198195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.m */,
+				A4DB6199195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
+				A4DB619A195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
+			);
+			name = TPKeyboardAvoidingScrollView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -453,7 +468,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A419B0851905553900E60374 /* InfoPlist.strings in Resources */,
-				A4111D091920D740002B8E52 /* background.png in Resources */,
 				A419B0901905553900E60374 /* Images.xcassets in Resources */,
 				A41DBA8B1947509D00D6CB62 /* Responses.rtf in Resources */,
 				A419B0AF1905586E00E60374 /* Storyboard.storyboard in Resources */,
@@ -476,6 +490,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A474BFD81917D00800FDCE3C /* NSString+RegularExpressions.m in Sources */,
+				A4DB619B195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.m in Sources */,
 				A419B0CD1905783900E60374 /* AFImageRequestOperation.m in Sources */,
 				A419B0B31905599200E60374 /* IQLoginViewController.m in Sources */,
 				A4CC7A0C194E214B00E8F2B2 /* UITextView+convertSizeToFit.m in Sources */,
@@ -503,6 +518,7 @@
 				A474BFDB1918283E00FDCE3C /* IQResultViewController.m in Sources */,
 				A419B0D01905783900E60374 /* AFPropertyListRequestOperation.m in Sources */,
 				A419B0CB1905783900E60374 /* AFHTTPClient.m in Sources */,
+				A4DB619C195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				A45362861943023A0023B450 /* Reachability.m in Sources */,
 				A419B0CC1905783900E60374 /* AFHTTPRequestOperation.m in Sources */,
 			);
