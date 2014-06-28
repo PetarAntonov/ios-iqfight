@@ -34,6 +34,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *answer3ImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *answer4ImageView;
 
+@property (nonatomic, assign) int prQuestionNumber;
+@property (nonatomic, assign) BOOL canShowInfo;
+
 @end
 
 @implementation IQGameViewController
@@ -63,6 +66,9 @@
     self.answer2Button.titleLabel.text = @"";
     self.answer3Button.titleLabel.text = @"";
     self.answer4Button.titleLabel.text = @"";
+    
+    self.prQuestionNumber = 0;
+    self.canShowInfo = YES;
     
     [self updateUI];
 }
@@ -123,6 +129,10 @@
     
     if (refreshQuestionSuccessfull) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.play[@"question"][@"number"] intValue] != [j[@"question"][@"number"] intValue]) {
+                self.canShowInfo = YES;
+            }
+            
             self.play = j;
             
             [self updateUI];
@@ -149,6 +159,13 @@
     
     if (answerQuestionSuccessfull) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (![j[@"correct"] boolValue]) {
+                self.canShowInfo = NO;
+                self.infoLabel.text = [NSString stringWithFormat:@"Wrong! Wait until others answer"];
+                self.infoLabel.hidden = NO;
+                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+            }
+            
             [self enableButtons:YES];
         });
     } else {
@@ -162,28 +179,32 @@
 {
 //    [self performSegueWithIdentifier:@"resultSegue" sender:nil];
     
-    UIButton *button = (UIButton *)sender;
-    [self enableButtons:NO];
-    
-    button.layer.borderWidth = 2.0;
-    button.layer.borderColor = [UIColor colorWithRed:102/255.0 green:204/255.0 blue:255/255.0 alpha:1].CGColor;
-    
-    for (UIView *subview in self.scrollView.subviews) {
-        if (subview.tag == button.tag) {
-            ((UIImageView *)subview).layer.borderWidth = 2.0;
-            ((UIImageView *)subview).layer.borderColor = [UIColor colorWithRed:102/255.0 green:204/255.0 blue:255/255.0 alpha:1].CGColor;
+    if (![self.play[@"is_blocked"] boolValue]) {
+        UIButton *button = (UIButton *)sender;
+        [self enableButtons:NO];
+        
+        button.layer.borderWidth = 2.0;
+        button.layer.borderColor = [UIColor colorWithRed:102/255.0 green:204/255.0 blue:255/255.0 alpha:1].CGColor;
+        
+        for (UIView *subview in self.scrollView.subviews) {
+            if (subview.tag == button.tag) {
+                ((UIImageView *)subview).layer.borderWidth = 2.0;
+                ((UIImageView *)subview).layer.borderColor = [UIColor colorWithRed:102/255.0 green:204/255.0 blue:255/255.0 alpha:1].CGColor;
+            }
         }
+        
+        [self performSelectorInBackground:@selector(doAnswer:) withObject:button];
+        
+        NSLog(@"AAAAAAAAAAAAAAAAAAAAa\nAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAA\nAAAAAAAAAAA");
     }
-    
-    [self performSelectorInBackground:@selector(doAnswer:) withObject:button];
 }
 
 #pragma mark - Private Methods
 
 - (void)updateUI
 {
-//trqbva da polucha nomer na vaprosa
-    //self.title = self.play[@""];
+    int questionNumber = [self.play[@"question"][@"number"] intValue] + 1;
+    self.title = [NSString stringWithFormat:@"Question %d", questionNumber] ;
     
     NSMutableArray *points = [@[] mutableCopy];
     if ([self.play[@"users"] count] > 0 && ![self.play[@"users"][0][@"name"] isEqualToString:@""]) {
@@ -210,21 +231,25 @@
         int index = [points indexOfObject:max];
         switch (index) {
             case 0:
-                self.player1Label.textColor = [UIColor greenColor];
-                self.player2Label.textColor = [UIColor redColor];
-                self.player3Label.textColor = [UIColor redColor];
+                self.player1Label.font = [UIFont boldSystemFontOfSize:15.0];
+                self.player2Label.font = [UIFont systemFontOfSize:15.0];
+                self.player3Label.font = [UIFont systemFontOfSize:15.0];
+                
                 break;
             case 1:
-                self.player2Label.textColor = [UIColor greenColor];
-                self.player1Label.textColor = [UIColor redColor];
-                self.player3Label.textColor = [UIColor redColor];
+                self.player2Label.font = [UIFont boldSystemFontOfSize:15.0];
+                self.player1Label.font = [UIFont systemFontOfSize:15.0];
+                self.player3Label.font = [UIFont systemFontOfSize:15.0];
                 break;
             case 2:
-                self.player3Label.textColor = [UIColor greenColor];
-                self.player2Label.textColor = [UIColor redColor];
-                self.player1Label.textColor = [UIColor redColor];
+                self.player3Label.font = [UIFont boldSystemFontOfSize:15.0];
+                self.player2Label.font = [UIFont systemFontOfSize:15.0];
+                self.player1Label.font = [UIFont systemFontOfSize:15.0];
                 break;
             default:
+                self.player1Label.font = [UIFont systemFontOfSize:15.0];
+                self.player2Label.font = [UIFont systemFontOfSize:15.0];
+                self.player3Label.font = [UIFont systemFontOfSize:15.0];
                 break;
         }
     }
@@ -322,20 +347,47 @@
         self.answer4ImageView.tag = [answers[3][@"id"] intValue];
     }
     
-//trqbva mi nomera na vaprosa
-    if ([self.play[@"answered_user"] isEqualToString:@""]) {
-        self.infoLabel.text = @"";
-        self.infoLabel.hidden = YES;
-    } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
-        self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on the previous question"];
-        self.infoLabel.hidden = NO;
-        [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
-    } else if (![self.play[@"answered_user"] isEqualToString:[IQSettings sharedInstance].currentUser.username]) {
-        self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on the previous question", self.play[@"answered_user"]];
-        self.infoLabel.hidden = NO;
+    [self updateInfoLabel];
+    
+    if ((CGRectGetMaxY(self.answer4Button.frame) + 40) > [UIScreen mainScreen].bounds.size.height) {
+        CGSize size = self.scrollView.contentSize;
+        size.height = (CGRectGetMaxY(self.answer4Button.frame) + 40);
+        self.scrollView.contentSize = size;
+        self.infoLabel.frame = CGRectMake(CGRectGetMinX(self.infoLabel.frame), CGRectGetMaxY(self.answer4Button.frame) + 8, CGRectGetWidth(self.infoLabel.frame), CGRectGetHeight(self.infoLabel.frame));
     } else {
-        self.infoLabel.text = @"You answered correct on the previous question";
-        self.infoLabel.hidden = NO;
+        self.scrollView.contentSize = [UIScreen mainScreen].bounds.size;
+        self.infoLabel.frame = CGRectMake(CGRectGetMinX(self.infoLabel.frame), [UIScreen mainScreen].bounds.size.height - CGRectGetHeight(self.infoLabel.frame) - 4, CGRectGetWidth(self.infoLabel.frame), CGRectGetHeight(self.infoLabel.frame));
+    }
+}
+
+- (void)updateInfoLabel
+{
+    if (self.canShowInfo) {
+        if ([self.play[@"question"][@"number"] intValue] > 0 && ([self.play[@"remaing_time"] intValue] / 1000) > 49) {
+            if ([self.play[@"answered_user"] isEqualToString:@""]) {
+                self.infoLabel.text = @"";
+                self.infoLabel.hidden = YES;
+                self.canShowInfo = YES;
+            } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
+                self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
+                self.infoLabel.hidden = NO;
+                self.canShowInfo = NO;
+                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+            } else if (![self.play[@"answered_user"] isEqualToString:[IQSettings sharedInstance].currentUser.username]) {
+                self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on question %d", self.play[@"answered_user"], [self.play[@"question"][@"number"] intValue]];
+                self.canShowInfo = NO;
+                self.infoLabel.hidden = NO;
+                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+            } else {
+                self.infoLabel.text = [NSString stringWithFormat:@"You answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
+                self.infoLabel.hidden = NO;
+                self.canShowInfo = NO;
+                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+            }
+        } else {
+            self.infoLabel.text = @"";
+            self.infoLabel.hidden = YES;
+        }
     }
 }
 
@@ -348,6 +400,7 @@
 - (void)hideInfoLabel
 {
     self.infoLabel.hidden = YES;
+    self.canShowInfo = YES;
 }
 
 - (void)enableButtons:(BOOL)enable
