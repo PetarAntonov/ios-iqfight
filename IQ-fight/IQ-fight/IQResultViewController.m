@@ -56,7 +56,11 @@
     
     self.navigationItem.hidesBackButton = YES;
     
-//    [self performSelectorInBackground:@selector(doShowResult) withObject:nil];
+    if ([[IQSettings sharedInstance] internetAvailable]) {
+//        [self performSelectorInBackground:@selector(doShowResult) withObject:nil];
+    } else {
+        [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+    }
 }
 
 - (void)didReceiveMemoryWarning

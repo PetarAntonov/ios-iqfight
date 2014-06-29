@@ -81,7 +81,11 @@
 - (void)refreshQuestion
 {
     if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGameViewController class]]) {
-        [self performSelectorInBackground:@selector(doRefreshQuestion) withObject:nil];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            [self performSelectorInBackground:@selector(doRefreshQuestion) withObject:nil];
+        } else {
+            [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+        }
     }
 }
 
@@ -193,7 +197,11 @@
             }
         }
         
-        [self performSelectorInBackground:@selector(doAnswer:) withObject:button];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            [self performSelectorInBackground:@selector(doAnswer:) withObject:button];
+        } else {
+            [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+        }
         
         NSLog(@"AAAAAAAAAAAAAAAAAAAAa\nAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAA\nAAAAAAAAAAA");
     }

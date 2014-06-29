@@ -67,9 +67,14 @@
     }
     
     if (![name isEqualToString:@""]) {
-        [self performSelectorInBackground:@selector(doNewGame:) withObject:@{@"name":name,
-                                                                             @"type":@(type),
-                                                                             @"password":password}];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+            [self performSelectorInBackground:@selector(doNewGame:) withObject:@{@"name":name,
+                                                                                 @"type":@(type),
+                                                                                 @"password":password}];
+        } else {
+            [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+        }
     } else {
         [self showAlertWithTitle:@"Error" message:@"Enter game name." cancelButton:@"OK"];
     }
@@ -77,10 +82,6 @@
 
 - (void)doNewGame:(NSDictionary *)dic
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    });
-    
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService newGame:dic];
@@ -109,9 +110,13 @@
         self.gameName = j[@"name"];
         self.gameID = j[@"id"];
         
-        DataService *dService = [[DataService alloc] init];
-        dService.delegate = self;
-        [dService openGame:self.gameID];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            DataService *dService = [[DataService alloc] init];
+            dService.delegate = self;
+            [dService openGame:self.gameID];
+        } else {
+            [self dataServiceError:self errorMessage:@"No internet connection."];
+        }
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
@@ -127,9 +132,13 @@
         openGameSuccessfull = NO;
     
     if (openGameSuccessfull) {
-        DataService *dService = [[DataService alloc] init];
-        dService.delegate = self;
-        [dService refreshGame:self.gameID];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            DataService *dService = [[DataService alloc] init];
+            dService.delegate = self;
+            [dService refreshGame:self.gameID];
+        } else {
+            [self dataServiceError:self errorMessage:@"No internet connection."];
+        }
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
@@ -162,9 +171,6 @@
             
         });
     } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[IQSettings sharedInstance] hideHud:self.view];
-        });
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
 }

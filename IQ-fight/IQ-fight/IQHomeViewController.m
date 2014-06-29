@@ -17,7 +17,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *joinGameButton;
 
 @property (nonatomic, strong) NSDictionary *games;
-@property (nonatomic, assign) BOOL isLogout;
 
 @end
 
@@ -40,7 +39,6 @@
 {
     [super viewWillAppear:animated];
     
-    self.isLogout = NO;
     self.title = [IQSettings sharedInstance].currentUser.username;
 }
 
@@ -60,21 +58,28 @@
 
 - (IBAction)logoutButtonTapped:(id)sender
 {
-    self.isLogout = YES;
-    [self performSelectorInBackground:@selector(doLogout) withObject:nil];
+    [self logout];
+    
+    if ([[IQSettings sharedInstance] internetAvailable]) {
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+        [self performSelectorInBackground:@selector(doLogout) withObject:nil];
+    } else {
+        [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+    }
 }
 
 - (IBAction)joinGameButtonTapped:(id)sender
 {
-    [self performSelectorInBackground:@selector(doGetGames) withObject:nil];
+    if ([[IQSettings sharedInstance] internetAvailable]) {
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+        [self performSelectorInBackground:@selector(doGetGames) withObject:nil];
+    } else {
+        [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+    }
 }
 
 - (void)doGetGames
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    });
-    
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService getGames];
@@ -82,10 +87,6 @@
 
 - (void)doLogout
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    });
-    
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService logout];
@@ -95,14 +96,10 @@
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {
-    if (self.isLogout) {
-        [self logout];
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[IQSettings sharedInstance] hideHud:self.view];
-            [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
-        });
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] hideHud:self.view];
+        [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
+    });
 }
 
 - (void)dataServiceGetGamesFinished:(id)sender withData:(NSData *)data
@@ -129,7 +126,7 @@
 
 - (void)dataServiceLogoutFinished:(id)sender withData:(NSData *)data
 {
-    [self logout];
+    
 }
 
 #pragma mark - Private Methods
@@ -142,8 +139,6 @@
 
 - (void)logout
 {
-    self.isLogout = NO;
-    
     NSDictionary* cookieDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:@"sessionid"];
     if (cookieDictionary) {
         NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieDictionary];

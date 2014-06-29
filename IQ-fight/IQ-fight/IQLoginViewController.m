@@ -59,8 +59,13 @@
     
     if (![username isEqualToString:@""] && ![password isEqualToString:@""]) {
         if ([self.usernameTextField.text isValidEmail]) {
-            [self performSelectorInBackground:@selector(doLogin:) withObject:@{@"username":username,
-                                                                               @"password":password}];
+            if ([[IQSettings sharedInstance] internetAvailable]) {
+                [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+                [self performSelectorInBackground:@selector(doLogin:) withObject:@{@"username":username,
+                                                                                   @"password":password}];
+            } else {
+                [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+            }
         } else {
             [self showAlertWithTitle:@"Error" message:@"Invalid email." cancelButton:@"OK"];
         }
@@ -71,10 +76,6 @@
 
 - (void)doLogin:(NSDictionary *)dic
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    });
-    
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService loginWithUsername:dic[@"username"] andPassword:dic[@"password"]];

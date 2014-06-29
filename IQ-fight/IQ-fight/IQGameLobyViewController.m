@@ -64,7 +64,11 @@
 - (void)refreshGame
 {
     if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGameLobyViewController class]]) {
-        [self performSelectorInBackground:@selector(doRefreshGame) withObject:nil];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            [self performSelectorInBackground:@selector(doRefreshGame) withObject:nil];
+        } else {
+            [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+        }
     }
 }
 
@@ -77,10 +81,6 @@
 
 - (void)startGame
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    });
-    
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService playGame];
@@ -162,7 +162,12 @@
             [self performSelector:@selector(updateTimeLabel) withObject:nil afterDelay:1];
         }
     } else {
-        [self performSelectorInBackground:@selector(startGame) withObject:nil];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+            [self performSelectorInBackground:@selector(startGame) withObject:nil];
+        } else {
+            [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+        }
     }
 }
 

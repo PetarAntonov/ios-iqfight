@@ -59,9 +59,14 @@
         if ([username isValidEmail]) {
             
             if ([password isEqualToString:password1]) {
-                [self performSelectorInBackground:@selector(doRegister:) withObject:@{@"username":username,
-                                                                                      @"password":password,
-                                                                                      @"password1":password1}];
+                if ([[IQSettings sharedInstance] internetAvailable]) {
+                    [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+                    [self performSelectorInBackground:@selector(doRegister:) withObject:@{@"username":username,
+                                                                                          @"password":password,
+                                                                                          @"password1":password1}];
+                } else {
+                    [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+                }
             } else {
                 [self showAlertWithTitle:@"Error" message:@"Passwords doesn't match." cancelButton:@"OK"];
             }
@@ -75,10 +80,6 @@
 
 - (void)doRegister:(NSDictionary *)dic
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    });
-    
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService createRegistrationWithUsername:dic[@"username"] password:dic[@"password"] andPassword1:dic[@"password1"]];

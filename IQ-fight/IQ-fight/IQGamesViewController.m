@@ -120,7 +120,12 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if ([self.games[@"games"][indexPath.row][@"password"] isEqualToString:@""] || self.games[@"games"][indexPath.row][@"password"] == nil) {
-        [self openGame];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+            [self openGame];
+        } else {
+            [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+        }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Private game!" message:@"Enter password to join" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Enter", nil];
         alert.alertViewStyle = UIAlertViewStyleSecureTextInput;
@@ -139,19 +144,35 @@
 
 - (void)quitGames
 {
-    [self performSelectorInBackground:@selector(doQuitGame) withObject:nil];
+    if ([[IQSettings sharedInstance] internetAvailable]) {
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+        [self performSelectorInBackground:@selector(doQuitGame) withObject:nil];
+    } else {
+        [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+    }
 }
 
 - (void)refreshGames
 {
-    if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGamesViewController class]]) {
-        [self performSelectorInBackground:@selector(doGetGames) withObject:nil];
+    if ([[IQSettings sharedInstance] internetAvailable]) {
+        if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGamesViewController class]]) {
+            [self performSelectorInBackground:@selector(doGetGames) withObject:nil];
+        }
+    } else {
+        [self dataServiceError:self errorMessage:@"No internet connection."];
     }
 }
 
 - (void)openGame
 {
     [self performSelectorInBackground:@selector(doOpenGame) withObject:nil];
+}
+
+- (void)doQuitGame
+{
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService quitGame];
 }
 
 - (void)doGetGames
@@ -161,23 +182,8 @@
     [dService getGames];
 }
 
-- (void)doQuitGame
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    });
-    
-    DataService *dService = [[DataService alloc] init];
-    dService.delegate = self;
-    [dService quitGame];
-}
-
 - (void)doOpenGame
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    });
-    
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService openGame:self.gameID];
@@ -203,7 +209,11 @@
         quitGameSuccessfull = NO;
     
     if (quitGameSuccessfull) {
-        [self doGetGames];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            [self doGetGames];
+        } else {
+            [self dataServiceError:self errorMessage:@"No internet connection."];
+        }
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
@@ -243,9 +253,13 @@
         openGameSuccessfull = NO;
     
     if (openGameSuccessfull) {
-        DataService *dService = [[DataService alloc] init];
-        dService.delegate = self;
-        [dService refreshGame:self.gameID];
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            DataService *dService = [[DataService alloc] init];
+            dService.delegate = self;
+            [dService refreshGame:self.gameID];
+        } else {
+            [self dataServiceError:self errorMessage:@"No internet connection."];
+        }
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
@@ -288,7 +302,6 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
     UITextField * alertTextField = [alertView textFieldAtIndex:0];
     if (buttonIndex == 1) {
         for (NSDictionary *game in self.games[@"games"]) {
