@@ -47,16 +47,6 @@
     self.lastURL = [NSString stringWithFormat:@"%@%@?username=%@&password=%@", [IQSettings sharedInstance].servicesURL, @"/login", username, password];
     
     [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
-    
-//POST REQUEST
-//    NSDictionary *params = @{@"username": username,
-//                             @"password": password};
-//
-//    NSData *postData = [[IQSettings sharedInstance] dictToJSONData:params];
-//    NSData *postData = [[NSString stringWithFormat:@"username=%@&password=%@", username, password] dataUsingEncoding:NSUTF8StringEncoding];
-//    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/login"];
-//
-//    [self.urlReader getFromURL:self.lastURL postData:postData postMethod:@"POST"];
 }
 
 - (void)createRegistrationWithUsername:(NSString *)username password:(NSString *)password andPassword1:(NSString *)password1
@@ -70,17 +60,6 @@
     self.lastURL = [NSString stringWithFormat:@"%@%@?username=%@&password=%@&password1=%@", [IQSettings sharedInstance].servicesURL, @"/register", username, password, password1];
     
     [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
-
-//POST REQUEST
-//    NSDictionary *params = @{@"username": username,
-//                             @"password": password,
-//                             @"password1": password1};
-//    
-//    NSData *postData = [[IQSettings sharedInstance] dictToJSONData:params];
-//    
-//    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/register"];
-//    
-//    [self.urlReader getFromURL:self.lastURL postData:postData postMethod:@"POST"];
 }
 
 - (void)getGames
@@ -107,15 +86,6 @@
     self.lastURL = [NSString stringWithFormat:@"%@%@?id=%@", [IQSettings sharedInstance].servicesURL, @"/open_game", gameID];
     
     [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
-    
-//POST REQUEST
-//    NSDictionary *params = @{@"id": gameID};
-//    
-//    NSData *postData = [[IQSettings sharedInstance] dictToJSONData:params];
-//    
-//    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/open_game"];
-//    
-//    [self.urlReader getFromURL:self.lastURL postData:postData postMethod:@"POST"];
 }
 
 - (void)refreshGame:(NSString *)gameID
@@ -129,15 +99,6 @@
     self.lastURL = [NSString stringWithFormat:@"%@%@?id=%@", [IQSettings sharedInstance].servicesURL, @"/refresh_game", gameID];
     
     [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
-    
-//POST REQUEST
-//    NSDictionary *params = @{@"id": gameID};
-//    
-//    NSData *postData = [[IQSettings sharedInstance] dictToJSONData:params];
-//    
-//    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/refresh_game"];
-//    
-//    [self.urlReader getFromURL:self.lastURL postData:postData postMethod:@"POST"];
 }
 
 - (void)playGame
@@ -164,18 +125,8 @@
     self.lastURL = [NSString stringWithFormat:@"%@%@?answer_id=%@", [IQSettings sharedInstance].servicesURL, @"/answer", answerID];
     
     [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
-    
-//POST REQUEST
-//    NSDictionary *params = @{@"answer_id": answerID};
-//    
-//    NSData *postData = [[IQSettings sharedInstance] dictToJSONData:params];
-//    
-//    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/answer"];
-//    
-//    [self.urlReader getFromURL:self.lastURL postData:postData postMethod:@"POST"];
 }
 
-//TODO:napravi nov newGame s novi parametri pass i type
 - (void)newGame:(NSDictionary *)dic
 {
     self.OperationID = WSOperationsNewGame;
@@ -215,8 +166,7 @@
     [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
 }
 
-//TODO:tuk sloji validen url
-- (void)showResult
+- (void)showResult:(NSString *)gameID
 {
     self.OperationID = WSOperationResult;
     
@@ -224,11 +174,23 @@
         self.urlReader = [[URLReader alloc] init];
     [self.urlReader setDelegate:self];
     
-    self.lastURL = [NSString stringWithFormat:@"%@%@", [IQSettings sharedInstance].servicesURL, @"/result"];
+    self.lastURL = [NSString stringWithFormat:@"%@%@?game=%@&limit=3&offset=0", [IQSettings sharedInstance].servicesURL, @"/statistics", gameID];
     
     [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
 }
 
+- (void)showStatistics
+{
+    self.OperationID = WSOperationStatistics;
+    
+    if (self.urlReader == nil)
+        self.urlReader = [[URLReader alloc] init];
+    [self.urlReader setDelegate:self];
+    
+    self.lastURL = [NSString stringWithFormat:@"%@%@?limit=1000&offset=0", [IQSettings sharedInstance].servicesURL, @"/statistics"];
+    
+    [self.urlReader getFromURL:self.lastURL postData:nil postMethod:@"GET"];
+}
 #pragma mark - URLReader delegates
 
 - (void)urlRequestError:(id)sender errorMessage:(NSString *)errorMessage {
@@ -285,6 +247,10 @@
         case WSOperationResult:
             if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceResultFinished:withData:)])
                 [self.delegate dataServiceResultFinished:self withData:resultData];
+            break;
+        case WSOperationStatistics:
+            if (self.delegate && [self.delegate respondsToSelector:@selector(dataServiceStatisticsFinished:withData:)])
+                [self.delegate dataServiceStatisticsFinished:self withData:resultData];
             break;
         default:
             break;

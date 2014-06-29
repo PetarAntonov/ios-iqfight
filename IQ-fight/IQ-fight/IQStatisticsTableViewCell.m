@@ -1,14 +1,14 @@
 //
-//  IQGameTableViewCell.m
+//  IQStatisticsTableViewCell.m
 //  IQ-fight
 //
-//  Created by Petar Antonov on 4/21/14.
+//  Created by Petar Antonov on 6/29/14.
 //  Copyright (c) 2014 Petar Antonov. All rights reserved.
 //
 
-#import "IQGameTableViewCell.h"
+#import "IQStatisticsTableViewCell.h"
 
-@implementation IQGameTableViewCell
+@implementation IQStatisticsTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

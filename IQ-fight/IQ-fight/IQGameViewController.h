@@ -11,5 +11,6 @@
 @interface IQGameViewController : UIViewController
 
 @property (nonatomic, strong) NSDictionary *play;
+@property (nonatomic, strong) NSString *gameID;
 
 @end

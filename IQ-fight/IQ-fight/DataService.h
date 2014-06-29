@@ -25,6 +25,7 @@
 - (void)dataServiceQuitGame:(id)sender withData:(NSData *)data;
 - (void)dataServiceLogoutFinished:(id)sender withData:(NSData *)data;
 - (void)dataServiceResultFinished:(id)sender withData:(NSData *)data;
+- (void)dataServiceStatisticsFinished:(id)sender withData:(NSData *)data;
 
 @end
 
@@ -43,6 +44,7 @@
 - (void)newGame:(NSDictionary *)dic;
 - (void)quitGame;
 - (void)logout;
-- (void)showResult;
+- (void)showResult:(NSString *)gameID;
+- (void)showStatistics;
 
 @end

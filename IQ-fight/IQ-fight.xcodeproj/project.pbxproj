@@ -50,6 +50,8 @@
 		A474BFD81917D00800FDCE3C /* NSString+RegularExpressions.m in Sources */ = {isa = PBXBuildFile; fileRef = A474BFD71917D00800FDCE3C /* NSString+RegularExpressions.m */; };
 		A474BFDB1918283E00FDCE3C /* IQResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A474BFDA1918283E00FDCE3C /* IQResultViewController.m */; };
 		A4BE470C19446510008EC970 /* IQNewGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4BE470B19446510008EC970 /* IQNewGameViewController.m */; };
+		A4C150EE19602894009D5A9E /* IQStatisticsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C150ED19602894009D5A9E /* IQStatisticsViewController.m */; };
+		A4C150F119602984009D5A9E /* IQStatisticsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4C150F019602984009D5A9E /* IQStatisticsTableViewCell.m */; };
 		A4CC7A0C194E214B00E8F2B2 /* UITextView+convertSizeToFit.m in Sources */ = {isa = PBXBuildFile; fileRef = A4CC7A0B194E214B00E8F2B2 /* UITextView+convertSizeToFit.m */; };
 		A4DB619B195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A4DB6198195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.m */; };
 		A4DB619C195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = A4DB619A195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
@@ -141,6 +143,10 @@
 		A47FF58B195B470300499E1C /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 		A4BE470A19446510008EC970 /* IQNewGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQNewGameViewController.h; sourceTree = "<group>"; };
 		A4BE470B19446510008EC970 /* IQNewGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQNewGameViewController.m; sourceTree = "<group>"; };
+		A4C150EC19602894009D5A9E /* IQStatisticsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQStatisticsViewController.h; sourceTree = "<group>"; };
+		A4C150ED19602894009D5A9E /* IQStatisticsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQStatisticsViewController.m; sourceTree = "<group>"; };
+		A4C150EF19602984009D5A9E /* IQStatisticsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQStatisticsTableViewCell.h; sourceTree = "<group>"; };
+		A4C150F019602984009D5A9E /* IQStatisticsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQStatisticsTableViewCell.m; sourceTree = "<group>"; };
 		A4CC7A0A194E214B00E8F2B2 /* UITextView+convertSizeToFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+convertSizeToFit.h"; sourceTree = "<group>"; };
 		A4CC7A0B194E214B00E8F2B2 /* UITextView+convertSizeToFit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+convertSizeToFit.m"; sourceTree = "<group>"; };
 		A4DB6197195EC0AB005C6E3C /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
@@ -285,6 +291,8 @@
 				A419B0DA19057F5100E60374 /* IQGamesViewController.m */,
 				A4BE470A19446510008EC970 /* IQNewGameViewController.h */,
 				A4BE470B19446510008EC970 /* IQNewGameViewController.m */,
+				A4C150EC19602894009D5A9E /* IQStatisticsViewController.h */,
+				A4C150ED19602894009D5A9E /* IQStatisticsViewController.m */,
 				A419B0E3190585B100E60374 /* IQGameLobyViewController.h */,
 				A419B0E4190585B100E60374 /* IQGameLobyViewController.m */,
 				A419B0E61905929B00E60374 /* IQGameViewController.h */,
@@ -351,6 +359,8 @@
 			children = (
 				A419B0E01905848900E60374 /* IQGameTableViewCell.h */,
 				A419B0E11905848900E60374 /* IQGameTableViewCell.m */,
+				A4C150EF19602984009D5A9E /* IQStatisticsTableViewCell.h */,
+				A4C150F019602984009D5A9E /* IQStatisticsTableViewCell.m */,
 			);
 			name = CustomViews;
 			sourceTree = "<group>";
@@ -499,6 +509,7 @@
 				A419B0E81905929B00E60374 /* IQGameViewController.m in Sources */,
 				A419B0D81905793200E60374 /* IQServerCommunication.m in Sources */,
 				A474BFD51917C9D200FDCE3C /* IQRegistrationViewController.m in Sources */,
+				A4C150F119602984009D5A9E /* IQStatisticsTableViewCell.m in Sources */,
 				A419B0D21905783900E60374 /* AFXMLRequestOperation.m in Sources */,
 				A419B08B1905553900E60374 /* IQAppDelegate.m in Sources */,
 				A419B0D31905783900E60374 /* UIImageView+AFNetworking.m in Sources */,
@@ -520,6 +531,7 @@
 				A419B0CB1905783900E60374 /* AFHTTPClient.m in Sources */,
 				A4DB619C195EC0AB005C6E3C /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				A45362861943023A0023B450 /* Reachability.m in Sources */,
+				A4C150EE19602894009D5A9E /* IQStatisticsViewController.m in Sources */,
 				A419B0CC1905783900E60374 /* AFHTTPRequestOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

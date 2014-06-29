@@ -10,4 +10,6 @@
 
 @interface IQResultViewController : UIViewController
 
+@property (nonatomic, strong) NSArray *stats;
+
 @end

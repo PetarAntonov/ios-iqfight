@@ -11,12 +11,14 @@
 #import "IQSettings.h"
 #import "DataService.h"
 #import "IQGamesViewController.h"
+#import "IQStatisticsViewController.h"
 
 @interface IQHomeViewController () <DataServiceDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *logoutButton;
 @property (weak, nonatomic) IBOutlet UIButton *joinGameButton;
 
 @property (nonatomic, strong) NSDictionary *games;
+@property (nonatomic, strong) NSArray *statistics;
 
 @end
 
@@ -51,6 +53,8 @@
 {
     if ([segue.identifier isEqualToString:@"gamesSegue"]) {
         ((IQGamesViewController *)segue.destinationViewController).games = self.games;
+    } else if ([segue.identifier isEqualToString:@"statisticsSegue"]) {
+        ((IQStatisticsViewController *)segue.destinationViewController).statistics = self.statistics;
     }
 }
 
@@ -78,11 +82,28 @@
     }
 }
 
+- (IBAction)statisticsButtonTapped:(id)sender
+{
+    if ([[IQSettings sharedInstance] internetAvailable]) {
+        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+        [self performSelectorInBackground:@selector(doStatistics) withObject:nil];
+    } else {
+        [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+    }
+}
+
 - (void)doGetGames
 {
     DataService *dService = [[DataService alloc] init];
     dService.delegate = self;
     [dService getGames];
+}
+
+- (void)doStatistics
+{
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService showStatistics];
 }
 
 - (void)doLogout
@@ -118,6 +139,28 @@
             [[IQSettings sharedInstance] hideHud:self.view];
             
             [self performSegueWithIdentifier:@"gamesSegue" sender:nil];
+        });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
+}
+
+- (void)dataServiceStatisticsFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL statisticsSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        statisticsSuccessfull = NO;
+    
+    if (statisticsSuccessfull) {
+        self.statistics = j[@"users"];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
+            
+            [self performSegueWithIdentifier:@"statisticsSegue" sender:nil];
         });
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];

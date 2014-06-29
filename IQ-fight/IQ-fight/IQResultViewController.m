@@ -20,8 +20,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *homeButton;
 @property (weak, nonatomic) IBOutlet UIButton *gamesButton;
 
-@property (nonatomic, strong) NSDictionary *result;
-
 @end
 
 @implementation IQResultViewController
@@ -38,76 +36,20 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Results";
-    
-    self.result = @{@"users":@[@{@"name":@"peshotest@abv.bg",
-                                 @"points":@"3"},
-                               @{@"name":@"peshotest1@abv.bg",
-                                 @"points":@"2"},
-                               @{@"name":@"peshotest3@abv.bg",
-                                 @"points":@"0"}]};
-    
-    [self updateUI];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
     self.navigationItem.hidesBackButton = YES;
     
-    if ([[IQSettings sharedInstance] internetAvailable]) {
-//        [self performSelectorInBackground:@selector(doShowResult) withObject:nil];
-    } else {
-        [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
-    }
+    self.title = @"Results";
+    
+//    self.stats = @[@{@"usernam": @"peshotest@abv.bg", @"scores": @4},
+//                   @{@"usernam": @"peshotest2@abv.bg", @"scores": @1},
+//                   @{@"usernam": @"peshotest3@abv.bg", @"scores": @0}];
+    
+    [self updateUI];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-}
-
-- (void)doShowResult
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] showHud:@"" onView:self.view];
-    });
-    
-    DataService *dService = [[DataService alloc] init];
-    dService.delegate = self;
-    [dService showResult];
-}
-
-#pragma mark - Service delegates
-
-- (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[IQSettings sharedInstance] hideHud:self.view];
-        [self showAlertWithTitle:@"Error" message:errorMessage cancelButton:@"OK"];
-    });
-}
-
-- (void)dataServiceResultFinished:(id)sender withData:(NSData *)data
-{
-    //TODO: kakvo vrashta zaqvkata
-    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
-    
-    BOOL resultSuccessfull = YES;
-    
-    if (![j[@"status"] isEqualToString:@"ok"])
-        resultSuccessfull = NO;
-    
-    if (resultSuccessfull) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[IQSettings sharedInstance] hideHud:self.view];
-            self.result = j;
-            [self updateUI];
-        });
-    } else {
-        [self dataServiceError:self errorMessage:j[@"error_message"]];
-    }
 }
 
 #pragma mark - Action Methods
@@ -137,18 +79,24 @@
 
 - (void)updateUI
 {
-    if ([self.result[@"users"] count] > 0 && ![self.result[@"users"][0][@"name"] isEqualToString:@""]) {
-        self.player1Label.text = [NSString stringWithFormat:@"%@: %@", self.result[@"users"][0][@"name"], self.result[@"users"][0][@"points"]];
+    if ([[IQSettings sharedInstance].currentUser.username isEqualToString:self.stats[0][@"usernam"]]) {
+        self.titleLabel.text = @"You won";
+    } else {
+        self.titleLabel.text = @"You lose";
+    }
+    
+    if ([self.stats count] > 0 && ![self.stats[0][@"usernam"] isEqualToString:@""]) {
+        self.player1Label.text = [NSString stringWithFormat:@"%@: %@", self.stats[0][@"usernam"], self.stats[0][@"scores"]];
     } else {
         self.player1Label.text = @"";
     }
-    if ([self.result[@"users"] count] > 1 && ![self.result[@"users"][1][@"name"] isEqualToString:@""]) {
-        self.player2Label.text = [NSString stringWithFormat:@"%@: %@", self.result[@"users"][1][@"name"], self.result[@"users"][1][@"points"]];
+    if ([self.stats count] > 1 && ![self.stats[1][@"usernam"] isEqualToString:@""]) {
+        self.player2Label.text = [NSString stringWithFormat:@"%@: %@", self.stats[1][@"usernam"], self.stats[1][@"scores"]];
     } else {
         self.player2Label.text = @"";
     }
-    if ([self.result[@"users"] count] > 2 && ![self.result[@"users"][2][@"name"] isEqualToString:@""]) {
-        self.player3Label.text = [NSString stringWithFormat:@"%@: %@", self.result[@"users"][2][@"name"], self.result[@"users"][2][@"points"]];
+    if ([self.stats count] > 2 && ![self.stats[2][@"usernam"] isEqualToString:@""]) {
+        self.player3Label.text = [NSString stringWithFormat:@"%@: %@", self.stats[2][@"usernam"], self.stats[2][@"scores"]];
     } else {
         self.player3Label.text = @"";
     }

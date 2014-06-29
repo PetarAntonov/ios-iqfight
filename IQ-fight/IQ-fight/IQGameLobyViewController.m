@@ -141,6 +141,7 @@
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
             IQGameViewController *gameVC = [storyboard instantiateViewControllerWithIdentifier:@"GameViewController"];
             gameVC.play = j;
+            gameVC.gameID = self.gameID;
             NSMutableArray *vsc = [self.navigationController.viewControllers mutableCopy];
             [vsc removeLastObject];
             [vsc addObject:gameVC];

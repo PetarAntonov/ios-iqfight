@@ -14,6 +14,7 @@
 #import "IQHomeViewController.h"
 #import "IQGamesViewController.h"
 #import "TPKeyboardAvoidingScrollView.h"
+#import "IQResultViewController.h"
 
 @interface IQGameViewController () <DataServiceDelegate>
 
@@ -36,6 +37,7 @@
 
 @property (nonatomic, assign) int prQuestionNumber;
 @property (nonatomic, assign) BOOL canShowInfo;
+@property (nonatomic, strong) NSArray *stats;
 
 @end
 
@@ -78,6 +80,13 @@
     [super didReceiveMemoryWarning];
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"resultSegue"]) {
+        ((IQResultViewController *)segue.destinationViewController).stats = self.stats;
+    }
+}
+
 - (void)refreshQuestion
 {
     if ([[self.navigationController.viewControllers lastObject] isKindOfClass:[IQGameViewController class]]) {
@@ -103,11 +112,19 @@
     [dService answerQuestion:[NSString stringWithFormat:@"%d", button.tag]];
 }
 
+- (void)doStatisticks
+{
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService showResult:self.gameID];
+}
+
 #pragma mark - Service delegates
 
 - (void)dataServiceError:(id)sender errorMessage:(NSString *)errorMessage
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        [[IQSettings sharedInstance] hideHud:self.view];
         if (!self.answer1Button.enabled) {
             [self enableButtons:YES];
         }
@@ -133,22 +150,28 @@
     
     if (refreshQuestionSuccessfull) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.play[@"question"][@"number"] intValue] != [j[@"question"][@"number"] intValue]) {
-                self.canShowInfo = YES;
+            
+            if ([j[@"game_over"] boolValue]) {
+                if ([[IQSettings sharedInstance] internetAvailable]) {
+                    [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+                    [self performSelectorInBackground:@selector(doStatisticks) withObject:nil];
+                } else {
+                    [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+                }
+            } else {
+                if ([self.play[@"question"][@"number"] intValue] != [j[@"question"][@"number"] intValue]) {
+                    self.canShowInfo = YES;
+                }
+                
+                self.play = j;
+                
+                [self updateUI];
+                
+                [self performSelector:@selector(refreshQuestion) withObject:nil afterDelay:1.0];
             }
-            
-            self.play = j;
-            
-            [self updateUI];
-            
-            [self performSelector:@selector(refreshQuestion) withObject:nil afterDelay:1.0];
         });
     } else {
-//        if ([j[@"error_message"] isEqualToString:@"Game over"]) {
-//            [self performSegueWithIdentifier:@"resultSegue" sender:nil];
-//        } else {
-            [self dataServiceError:self errorMessage:j[@"error_message"]];
-//        }
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
     }
 }
 
@@ -171,6 +194,27 @@
             }
             
             [self enableButtons:YES];
+        });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
+}
+
+- (void)dataServiceResultFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL statisticsSuccessfull = YES;
+    
+    if (![j[@"status"] isEqualToString:@"ok"])
+        statisticsSuccessfull = NO;
+    
+    if (statisticsSuccessfull) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[IQSettings sharedInstance] hideHud:self.view];
+            
+            self.stats = j[@"users"];
+            [self performSegueWithIdentifier:@"resultSegue" sender:nil];
         });
     } else {
         [self dataServiceError:self errorMessage:j[@"error_message"]];
@@ -357,14 +401,16 @@
     
     [self updateInfoLabel];
     
-    if ((CGRectGetMaxY(self.answer4Button.frame) + 40) > [UIScreen mainScreen].bounds.size.height) {
+    if ((CGRectGetMaxY(self.answer4Button.frame) + 40) > CGRectGetHeight(self.view.frame)) {
         CGSize size = self.scrollView.contentSize;
         size.height = (CGRectGetMaxY(self.answer4Button.frame) + 40);
         self.scrollView.contentSize = size;
         self.infoLabel.frame = CGRectMake(CGRectGetMinX(self.infoLabel.frame), CGRectGetMaxY(self.answer4Button.frame) + 8, CGRectGetWidth(self.infoLabel.frame), CGRectGetHeight(self.infoLabel.frame));
     } else {
-        self.scrollView.contentSize = [UIScreen mainScreen].bounds.size;
-        self.infoLabel.frame = CGRectMake(CGRectGetMinX(self.infoLabel.frame), [UIScreen mainScreen].bounds.size.height - CGRectGetHeight(self.infoLabel.frame) - 4, CGRectGetWidth(self.infoLabel.frame), CGRectGetHeight(self.infoLabel.frame));
+        CGSize size = self.scrollView.contentSize;
+        size.height = CGRectGetHeight(self.view.frame);
+        self.scrollView.contentSize = size;
+        self.infoLabel.frame = CGRectMake(CGRectGetMinX(self.infoLabel.frame), CGRectGetHeight(self.view.frame) - CGRectGetHeight(self.infoLabel.frame) - 4, CGRectGetWidth(self.infoLabel.frame), CGRectGetHeight(self.infoLabel.frame));
     }
 }
 
