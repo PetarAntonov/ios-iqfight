@@ -187,10 +187,10 @@
     if (answerQuestionSuccessfull) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (![j[@"correct"] boolValue]) {
-                self.canShowInfo = NO;
-                self.infoLabel.text = [NSString stringWithFormat:@"Wrong! Wait until others answer"];
-                self.infoLabel.hidden = NO;
-                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+//                self.canShowInfo = NO;
+//                self.infoLabel.text = [NSString stringWithFormat:@"Wrong! Wait until others answer"];
+//                self.infoLabel.hidden = NO;
+//                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
             }
             
             [self enableButtons:YES];
@@ -246,8 +246,6 @@
         } else {
             [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
         }
-        
-        NSLog(@"AAAAAAAAAAAAAAAAAAAAa\nAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAA\nAAAAAAAAAAA");
     }
 }
 
@@ -278,33 +276,33 @@
         self.player3Label.text = @"";
     }
     
-    NSNumber *max = [points valueForKeyPath:@"@max.intValue"];
-    if ([max intValue] > 0) {
-        int index = [points indexOfObject:max];
-        switch (index) {
-            case 0:
-                self.player1Label.font = [UIFont boldSystemFontOfSize:15.0];
-                self.player2Label.font = [UIFont systemFontOfSize:15.0];
-                self.player3Label.font = [UIFont systemFontOfSize:15.0];
-                
-                break;
-            case 1:
-                self.player2Label.font = [UIFont boldSystemFontOfSize:15.0];
-                self.player1Label.font = [UIFont systemFontOfSize:15.0];
-                self.player3Label.font = [UIFont systemFontOfSize:15.0];
-                break;
-            case 2:
-                self.player3Label.font = [UIFont boldSystemFontOfSize:15.0];
-                self.player2Label.font = [UIFont systemFontOfSize:15.0];
-                self.player1Label.font = [UIFont systemFontOfSize:15.0];
-                break;
-            default:
-                self.player1Label.font = [UIFont systemFontOfSize:15.0];
-                self.player2Label.font = [UIFont systemFontOfSize:15.0];
-                self.player3Label.font = [UIFont systemFontOfSize:15.0];
-                break;
-        }
-    }
+//    NSNumber *max = [points valueForKeyPath:@"@max.intValue"];
+//    if ([max intValue] > 0) {
+//        int index = [points indexOfObject:max];
+//        switch (index) {
+//            case 0:
+//                self.player1Label.font = [UIFont boldSystemFontOfSize:15.0];
+//                self.player2Label.font = [UIFont systemFontOfSize:15.0];
+//                self.player3Label.font = [UIFont systemFontOfSize:15.0];
+//                
+//                break;
+//            case 1:
+//                self.player2Label.font = [UIFont boldSystemFontOfSize:15.0];
+//                self.player1Label.font = [UIFont systemFontOfSize:15.0];
+//                self.player3Label.font = [UIFont systemFontOfSize:15.0];
+//                break;
+//            case 2:
+//                self.player3Label.font = [UIFont boldSystemFontOfSize:15.0];
+//                self.player2Label.font = [UIFont systemFontOfSize:15.0];
+//                self.player1Label.font = [UIFont systemFontOfSize:15.0];
+//                break;
+//            default:
+//                self.player1Label.font = [UIFont systemFontOfSize:15.0];
+//                self.player2Label.font = [UIFont systemFontOfSize:15.0];
+//                self.player3Label.font = [UIFont systemFontOfSize:15.0];
+//                break;
+//        }
+//    }
     
     self.timeLeftLabel.text = [NSString stringWithFormat:@"Time left: %d", ([self.play[@"remaing_time"] intValue] / 1000)];
     
@@ -416,32 +414,30 @@
 
 - (void)updateInfoLabel
 {
-    if (self.canShowInfo) {
-        if ([self.play[@"question"][@"number"] intValue] > 0 && ([self.play[@"remaing_time"] intValue] / 1000) > 49) {
-            if ([self.play[@"answered_user"] isEqualToString:@""]) {
-                self.infoLabel.text = @"";
-                self.infoLabel.hidden = YES;
-                self.canShowInfo = YES;
-            } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
-                self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
-                self.infoLabel.hidden = NO;
-                self.canShowInfo = NO;
-                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
-            } else if (![self.play[@"answered_user"] isEqualToString:[IQSettings sharedInstance].currentUser.username]) {
-                self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on question %d", self.play[@"answered_user"], [self.play[@"question"][@"number"] intValue]];
-                self.canShowInfo = NO;
-                self.infoLabel.hidden = NO;
-                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
-            } else {
-                self.infoLabel.text = [NSString stringWithFormat:@"You answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
-                self.infoLabel.hidden = NO;
-                self.canShowInfo = NO;
-                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
-            }
-        } else {
+    if ([self.play[@"question"][@"number"] intValue] > 0 && ([self.play[@"remaing_time"] intValue] / 1000) > 49) {
+        if ([self.play[@"answered_user"] isEqualToString:@""]) {
             self.infoLabel.text = @"";
             self.infoLabel.hidden = YES;
+            self.canShowInfo = YES;
+        } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
+            self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
+            self.infoLabel.hidden = NO;
+            self.canShowInfo = NO;
+            [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+        } else if (![self.play[@"answered_user"] isEqualToString:[IQSettings sharedInstance].currentUser.username]) {
+            self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on question %d", self.play[@"answered_user"], [self.play[@"question"][@"number"] intValue]];
+            self.canShowInfo = NO;
+            self.infoLabel.hidden = NO;
+            [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+        } else {
+            self.infoLabel.text = [NSString stringWithFormat:@"You answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
+            self.infoLabel.hidden = NO;
+            self.canShowInfo = NO;
+            [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
         }
+    } else {
+        self.infoLabel.text = @"";
+        self.infoLabel.hidden = YES;
     }
 }
 

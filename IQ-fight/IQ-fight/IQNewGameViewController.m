@@ -60,6 +60,7 @@
     [self.view endEditing:YES];
     
     NSString *name = self.nameTextField.text;
+    name = [name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     int type = self.ddRow;
     NSString *password = @"";
     if (![self.gameTypeTextField.text isEqualToString:@""] && self.gameTypeTextField.text != nil) {
