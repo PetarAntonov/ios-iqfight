@@ -762,10 +762,18 @@
                                     </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Nobody answered correct" id="Vge-aj-fGH">
                                         <rect key="frame" x="10" y="464" width="300" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" id="WVL-HW-3mc">
+                                        <rect key="frame" x="10" y="464" width="300" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                 </subviews>
@@ -785,6 +793,7 @@
                         <outlet property="answer3ImageView" destination="eIs-gT-FCC" id="aeV-Pf-yTw"/>
                         <outlet property="answer4Button" destination="RbI-RX-yBz" id="cyL-er-drL"/>
                         <outlet property="answer4ImageView" destination="Vfu-f7-D1i" id="Z9w-81-Ctp"/>
+                        <outlet property="answerInfoTextView" destination="WVL-HW-3mc" id="LGR-J6-4YW"/>
                         <outlet property="infoTextView" destination="Vge-aj-fGH" id="Suq-av-EBl"/>
                         <outlet property="player1Label" destination="TZp-G0-oVe" id="PdN-z1-4bL"/>
                         <outlet property="player2Label" destination="5US-cy-EpJ" id="Wli-30-Yxv"/>
