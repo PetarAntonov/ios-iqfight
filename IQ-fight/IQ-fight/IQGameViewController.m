@@ -36,7 +36,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *answer4ImageView;
 
 @property (nonatomic, assign) int prQuestionNumber;
-@property (nonatomic, assign) BOOL canShowInfo;
 @property (nonatomic, strong) NSArray *stats;
 
 @end
@@ -70,7 +69,8 @@
     self.answer4Button.titleLabel.text = @"";
     
     self.prQuestionNumber = 0;
-    self.canShowInfo = YES;
+    
+    self.infoLabel.hidden = YES;
     
     [self updateUI];
 }
@@ -159,10 +159,6 @@
                     [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
                 }
             } else {
-                if ([self.play[@"question"][@"number"] intValue] != [j[@"question"][@"number"] intValue]) {
-                    self.canShowInfo = YES;
-                }
-                
                 self.play = j;
                 
                 [self updateUI];
@@ -187,10 +183,9 @@
     if (answerQuestionSuccessfull) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (![j[@"correct"] boolValue]) {
-//                self.canShowInfo = NO;
-//                self.infoLabel.text = [NSString stringWithFormat:@"Wrong! Wait until others answer"];
-//                self.infoLabel.hidden = NO;
-//                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+                self.infoLabel.text = [NSString stringWithFormat:@"Wrong! Wait until others answer"];
+                self.infoLabel.hidden = NO;
+                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
             }
             
             [self enableButtons:YES];
@@ -414,30 +409,22 @@
 
 - (void)updateInfoLabel
 {
-    if ([self.play[@"question"][@"number"] intValue] > 0 && ([self.play[@"remaing_time"] intValue] / 1000) > 49) {
-        if ([self.play[@"answered_user"] isEqualToString:@""]) {
-            self.infoLabel.text = @"";
-            self.infoLabel.hidden = YES;
-            self.canShowInfo = YES;
-        } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
-            self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
-            self.infoLabel.hidden = NO;
-            self.canShowInfo = NO;
-            [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
-        } else if (![self.play[@"answered_user"] isEqualToString:[IQSettings sharedInstance].currentUser.username]) {
-            self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on question %d", self.play[@"answered_user"], [self.play[@"question"][@"number"] intValue]];
-            self.canShowInfo = NO;
-            self.infoLabel.hidden = NO;
-            [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
-        } else {
-            self.infoLabel.text = [NSString stringWithFormat:@"You answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
-            self.infoLabel.hidden = NO;
-            self.canShowInfo = NO;
-            [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
-        }
-    } else {
+   /* if ([self.play[@"answered_user"] isEqualToString:@""]) {
         self.infoLabel.text = @"";
         self.infoLabel.hidden = YES;
+        self.canShowInfo = YES;
+    } else*/ if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
+        self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
+        self.infoLabel.hidden = NO;
+        [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+    } else if (![self.play[@"answered_user"] isEqualToString:[IQSettings sharedInstance].currentUser.username]) {
+        self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on question %d", self.play[@"answered_user"], [self.play[@"question"][@"number"] intValue]];
+        self.infoLabel.hidden = NO;
+        [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+    } else {
+        self.infoLabel.text = [NSString stringWithFormat:@"You answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
+        self.infoLabel.hidden = NO;
+        [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
     }
 }
 
@@ -450,7 +437,6 @@
 - (void)hideInfoLabel
 {
     self.infoLabel.hidden = YES;
-    self.canShowInfo = YES;
 }
 
 - (void)enableButtons:(BOOL)enable
