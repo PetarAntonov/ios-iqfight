@@ -56,7 +56,8 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.backgroundView = nil;
     
-    [self quitGames];
+    [self refreshGames];
+//    [self quitGames];
 }
 
 - (void)didReceiveMemoryWarning

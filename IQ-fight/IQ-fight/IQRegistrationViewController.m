@@ -85,6 +85,13 @@
     [dService createRegistrationWithUsername:dic[@"username"] password:dic[@"password"] andPassword1:dic[@"password1"]];
 }
 
+- (void)doLogin:(NSDictionary *)dic
+{
+    DataService *dService = [[DataService alloc] init];
+    dService.delegate = self;
+    [dService loginWithUsername:dic[@"username"] andPassword:dic[@"password"]];
+}
+
 - (IBAction)cancelButtonTapped:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -110,6 +117,37 @@
         registrationSuccessfull = NO;
     
     if (registrationSuccessfull) {
+        if ([[IQSettings sharedInstance] internetAvailable]) {
+            [self doLogin:@{@"username":j[@"username"],
+                            @"password":[self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]}];
+        } else {
+            [self dataServiceError:self errorMessage:@"No internet connection."];
+        }
+        
+//        [IQSettings sharedInstance].currentUser.username = j[@"username"];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [[IQSettings sharedInstance] hideHud:self.view];
+            
+//            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+//            UINavigationController *navViewController = [storyboard instantiateViewControllerWithIdentifier:@"homeRoot"];
+//            IQAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+//            delegate.window.rootViewController = navViewController;
+//        });
+    } else {
+        [self dataServiceError:self errorMessage:j[@"error_message"]];
+    }
+}
+
+- (void)dataServiceLoginFinished:(id)sender withData:(NSData *)data
+{
+    NSDictionary *j = [[IQSettings sharedInstance] jsonToDict:data];
+    
+    BOOL loginSuccessfull = YES;
+    
+    if (j[@"username"] == nil || [j[@"username"] isEqualToString:@""] || ![j[@"status"] isEqualToString:@"ok"])
+        loginSuccessfull = NO;
+    
+    if (loginSuccessfull) {
         [IQSettings sharedInstance].currentUser.username = j[@"username"];
         
         dispatch_async(dispatch_get_main_queue(), ^{

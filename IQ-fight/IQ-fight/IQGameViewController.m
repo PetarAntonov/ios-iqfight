@@ -29,11 +29,12 @@
 @property (weak, nonatomic) IBOutlet UIButton *answer2Button;
 @property (weak, nonatomic) IBOutlet UIButton *answer3Button;
 @property (weak, nonatomic) IBOutlet UIButton *answer4Button;
-@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *answer1ImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *answer2ImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *answer3ImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *answer4ImageView;
+@property (weak, nonatomic) IBOutlet UITextView *infoTextView;
 
 @property (nonatomic, assign) int prQuestionNumber;
 @property (nonatomic, strong) NSArray *stats;
@@ -70,7 +71,8 @@
     
     self.prQuestionNumber = 0;
     
-    self.infoLabel.hidden = YES;
+//    self.infoLabel.hidden = YES;
+    self.infoTextView.text = @"";
     
     [self updateUI];
 }
@@ -183,9 +185,12 @@
     if (answerQuestionSuccessfull) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (![j[@"correct"] boolValue]) {
-                self.infoLabel.text = [NSString stringWithFormat:@"Wrong! Wait until others answer"];
-                self.infoLabel.hidden = NO;
-                [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+//                self.infoTextView.text = @"Wrong! Wait until others answer";
+//                [self.infoTextView convertSizeToFit];
+//                CGSize size = self.scrollView.contentSize;
+//                size.height = CGRectGetMaxY(self.infoTextView.frame);
+//                self.scrollView.contentSize = size;
+//                self.infoLabel.text = [NSString stringWithFormat:@"Wrong! Wait until others answer"];
             }
             
             [self enableButtons:YES];
@@ -271,34 +276,6 @@
         self.player3Label.text = @"";
     }
     
-//    NSNumber *max = [points valueForKeyPath:@"@max.intValue"];
-//    if ([max intValue] > 0) {
-//        int index = [points indexOfObject:max];
-//        switch (index) {
-//            case 0:
-//                self.player1Label.font = [UIFont boldSystemFontOfSize:15.0];
-//                self.player2Label.font = [UIFont systemFontOfSize:15.0];
-//                self.player3Label.font = [UIFont systemFontOfSize:15.0];
-//                
-//                break;
-//            case 1:
-//                self.player2Label.font = [UIFont boldSystemFontOfSize:15.0];
-//                self.player1Label.font = [UIFont systemFontOfSize:15.0];
-//                self.player3Label.font = [UIFont systemFontOfSize:15.0];
-//                break;
-//            case 2:
-//                self.player3Label.font = [UIFont boldSystemFontOfSize:15.0];
-//                self.player2Label.font = [UIFont systemFontOfSize:15.0];
-//                self.player1Label.font = [UIFont systemFontOfSize:15.0];
-//                break;
-//            default:
-//                self.player1Label.font = [UIFont systemFontOfSize:15.0];
-//                self.player2Label.font = [UIFont systemFontOfSize:15.0];
-//                self.player3Label.font = [UIFont systemFontOfSize:15.0];
-//                break;
-//        }
-//    }
-    
     self.timeLeftLabel.text = [NSString stringWithFormat:@"Time left: %d", ([self.play[@"remaing_time"] intValue] / 1000)];
     
     self.questionTextView.text = self.play[@"question"][@"question"];
@@ -330,6 +307,8 @@
         self.answer3ImageView.frame = self.answer3Button.frame;
         self.answer4ImageView.frame = self.answer4Button.frame;
     }
+    
+    self.infoTextView.frame = CGRectMake(CGRectGetMinX(self.infoTextView.frame), CGRectGetMaxY(self.answer4Button.frame), CGRectGetWidth(self.infoTextView.frame),CGRectGetHeight(self.infoTextView.frame));
     
     if (self.play[@"answers"] != nil && [self.play[@"answers"] count] > 0) {
         NSArray *answers = self.play[@"answers"];
@@ -392,40 +371,44 @@
         self.answer4ImageView.tag = [answers[3][@"id"] intValue];
     }
     
-    [self updateInfoLabel];
+    [self updateInfoText];
     
-    if ((CGRectGetMaxY(self.answer4Button.frame) + 40) > CGRectGetHeight(self.view.frame)) {
-        CGSize size = self.scrollView.contentSize;
-        size.height = (CGRectGetMaxY(self.answer4Button.frame) + 40);
-        self.scrollView.contentSize = size;
-        self.infoLabel.frame = CGRectMake(CGRectGetMinX(self.infoLabel.frame), CGRectGetMaxY(self.answer4Button.frame) + 8, CGRectGetWidth(self.infoLabel.frame), CGRectGetHeight(self.infoLabel.frame));
-    } else {
-        CGSize size = self.scrollView.contentSize;
-        size.height = CGRectGetHeight(self.view.frame);
-        self.scrollView.contentSize = size;
-        self.infoLabel.frame = CGRectMake(CGRectGetMinX(self.infoLabel.frame), CGRectGetHeight(self.view.frame) - CGRectGetHeight(self.infoLabel.frame) - 4, CGRectGetWidth(self.infoLabel.frame), CGRectGetHeight(self.infoLabel.frame));
-    }
+    CGSize size = self.scrollView.contentSize;
+    size.height = CGRectGetMaxY(self.infoTextView.frame);
+    self.scrollView.contentSize = size;
 }
 
-- (void)updateInfoLabel
+- (void)updateInfoText
 {
-   /* if ([self.play[@"answered_user"] isEqualToString:@""]) {
-        self.infoLabel.text = @"";
-        self.infoLabel.hidden = YES;
-        self.canShowInfo = YES;
-    } else*/ if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
-        self.infoLabel.text = [NSString stringWithFormat:@"Nobody answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
-        self.infoLabel.hidden = NO;
-        [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+    if ([self.play[@"answered_user"] isEqualToString:@""]) {
+        self.infoTextView.text = @"";
+    } else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
+        NSString *explanation;
+        if ([self.play[@"question"][@"explanation"] isEqualToString:@""]) {
+            explanation = [NSString stringWithFormat:@"No available explanation for this question."];
+        } else {
+            explanation = self.play[@"question"][@"explanation"];
+        }
+        self.infoTextView.text = [NSString stringWithFormat:@"Nobody answered correct.\nExplanation: %@", explanation];
     } else if (![self.play[@"answered_user"] isEqualToString:[IQSettings sharedInstance].currentUser.username]) {
-        self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on question %d", self.play[@"answered_user"], [self.play[@"question"][@"number"] intValue]];
-        self.infoLabel.hidden = NO;
-        [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+        NSString *explanation;
+        if ([self.play[@"question"][@"explanation"] isEqualToString:@""]) {
+            explanation = [NSString stringWithFormat:@"No available explanation for this question."];
+        } else {
+            explanation = self.play[@"question"][@"explanation"];
+        }
+        self.infoTextView.text = [NSString stringWithFormat:@"%@ answered correct.\nExplanation: %@", self.play[@"answered_user"], explanation];
     } else {
-        self.infoLabel.text = [NSString stringWithFormat:@"You answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
-        self.infoLabel.hidden = NO;
-        [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+        NSString *explanation;
+        if ([self.play[@"question"][@"explanation"] isEqualToString:@""]) {
+            explanation = [NSString stringWithFormat:@"No available explanation for this question."];
+        } else {
+            explanation = self.play[@"question"][@"explanation"];
+        }
+        self.infoTextView.text = [NSString stringWithFormat:@"You answered correct.\nExplanation: %@", explanation];
     }
+    
+    [self.infoTextView convertSizeToFit];
 }
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message cancelButton:(NSString *)button
@@ -434,10 +417,10 @@
     [alert show];
 }
 
-- (void)hideInfoLabel
-{
-    self.infoLabel.hidden = YES;
-}
+//- (void)hideInfoLabel
+//{
+//    self.infoLabel.hidden = YES;
+//}
 
 - (void)enableButtons:(BOOL)enable
 {
@@ -458,3 +441,61 @@
 }
 
 @end
+
+//NSNumber *max = [points valueForKeyPath:@"@max.intValue"];
+//if ([max intValue] > 0) {
+//    int index = [points indexOfObject:max];
+//    switch (index) {
+//        case 0:
+//            self.player1Label.font = [UIFont boldSystemFontOfSize:15.0];
+//            self.player2Label.font = [UIFont systemFontOfSize:15.0];
+//            self.player3Label.font = [UIFont systemFontOfSize:15.0];
+//            
+//            break;
+//        case 1:
+//            self.player2Label.font = [UIFont boldSystemFontOfSize:15.0];
+//            self.player1Label.font = [UIFont systemFontOfSize:15.0];
+//            self.player3Label.font = [UIFont systemFontOfSize:15.0];
+//            break;
+//        case 2:
+//            self.player3Label.font = [UIFont boldSystemFontOfSize:15.0];
+//            self.player2Label.font = [UIFont systemFontOfSize:15.0];
+//            self.player1Label.font = [UIFont systemFontOfSize:15.0];
+//            break;
+//        default:
+//            self.player1Label.font = [UIFont systemFontOfSize:15.0];
+//            self.player2Label.font = [UIFont systemFontOfSize:15.0];
+//            self.player3Label.font = [UIFont systemFontOfSize:15.0];
+//            break;
+//    }
+//}
+
+//if ((CGRectGetMaxY(self.answer4Button.frame) + 40) > CGRectGetHeight(self.view.frame)) {
+//    CGSize size = self.scrollView.contentSize;
+//    size.height = (CGRectGetMaxY(self.answer4Button.frame) + 40);
+//    self.scrollView.contentSize = size;
+//    self.infoLabel.frame = CGRectMake(CGRectGetMinX(self.infoLabel.frame), CGRectGetMaxY(self.answer4Button.frame) + 8, CGRectGetWidth(self.infoLabel.frame), CGRectGetHeight(self.infoLabel.frame));
+//} else {
+//    CGSize size = self.scrollView.contentSize;
+//    size.height = CGRectGetHeight(self.view.frame);
+//    self.scrollView.contentSize = size;
+//    self.infoLabel.frame = CGRectMake(CGRectGetMinX(self.infoLabel.frame), CGRectGetHeight(self.view.frame) - CGRectGetHeight(self.infoLabel.frame) - 4, CGRectGetWidth(self.infoLabel.frame), CGRectGetHeight(self.infoLabel.frame));
+//}
+
+//if ([self.play[@"answered_user"] isEqualToString:@""]) {
+//    self.infoLabel.text = @"";
+//    //        self.infoLabel.hidden = YES;
+//} else if ([self.play[@"answered_user"] isEqualToString:@"Nobody"]) {
+//    self.infoLabel.text = @"Nobody answered correct.";
+//    //        self.infoLabel.hidden = NO;
+//    [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+//} else if (![self.play[@"answered_user"] isEqualToString:[IQSettings sharedInstance].currentUser.username]) {
+//    self.infoLabel.text = [NSString stringWithFormat:@"%@ answered correct on question %d", self.play[@"answered_user"], [self.play[@"question"][@"number"] intValue]];
+//    self.infoLabel.hidden = NO;
+//    [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+//} else {
+//    self.infoLabel.text = [NSString stringWithFormat:@"You answered correct on question %d", [self.play[@"question"][@"number"] intValue]];
+//    self.infoLabel.hidden = NO;
+//    [self performSelector:@selector(hideInfoLabel) withObject:nil afterDelay:10];
+//}
+
