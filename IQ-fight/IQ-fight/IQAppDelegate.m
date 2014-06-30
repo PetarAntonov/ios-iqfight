@@ -35,9 +35,15 @@
     
     [self setCookie];
     
-    DataService *dService = [[DataService alloc] init];
-    dService.delegate = self;
-    [dService isLogged];
+    if ([[IQSettings sharedInstance] internetAvailable]) {
+        DataService *dService = [[DataService alloc] init];
+        dService.delegate = self;
+        [dService isLogged];
+    } else {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+        UIViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"loginRoot"];
+        self.window.rootViewController = loginViewController;
+    }
     
     [self.window makeKeyAndVisible];
 

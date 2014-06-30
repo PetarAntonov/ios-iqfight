@@ -40,10 +40,6 @@
     
     self.title = @"Results";
     
-//    self.stats = @[@{@"usernam": @"peshotest@abv.bg", @"scores": @4},
-//                   @{@"usernam": @"peshotest2@abv.bg", @"scores": @1},
-//                   @{@"usernam": @"peshotest3@abv.bg", @"scores": @0}];
-    
     [self updateUI];
 }
 

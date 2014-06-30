@@ -50,11 +50,11 @@
 - (id) init
 {
 	if (self = [super init]) {
-//#if (TARGET_IPHONE_SIMULATOR)
+#if (TARGET_IPHONE_SIMULATOR)
         self.inDebug = YES;
-//#else
-//        self.inDebug = NO;
-//#endif
+#else
+        self.inDebug = NO;
+#endif
         self.servicesURL = @"http://iqfight.empters.com";
         
         self.currentUser = [[IQCurrentUser alloc] init];

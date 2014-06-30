@@ -31,7 +31,6 @@
     if (![pMethod isEqualToString:@"GET"]) {
         [request setHTTPBody:pData];
     }
-//    [[IQSettings sharedInstance] LogThis:@"getFromURL method = %@, postData = %@", pMethod, [[IQSettings sharedInstance] jsonDataToString:pData]];
     
     NSError *error;
     NSURLResponse *response;
