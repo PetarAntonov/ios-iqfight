@@ -409,7 +409,7 @@
     [self.infoTextView convertSizeToFit];
     self.answerInfoTextView.frame = CGRectMake(CGRectGetMinX(self.answerInfoTextView.frame), CGRectGetMaxY(self.infoTextView.frame), CGRectGetWidth(self.answerInfoTextView.frame),CGRectGetHeight(self.answerInfoTextView.frame));
     CGSize size = self.scrollView.contentSize;
-    size.height = CGRectGetMaxY(self.infoTextView.frame) + 20;
+    size.height = CGRectGetMaxY(self.infoTextView.frame) + 30;
     self.scrollView.contentSize = size;
 }
 
