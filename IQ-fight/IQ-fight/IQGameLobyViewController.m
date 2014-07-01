@@ -112,10 +112,16 @@
             [self updateUI];
             
             if ([j[@"players_to_start"] intValue] == 0) {
-                self.timeToStartLabel.hidden = NO;
-                self.timeToStart = 5;
-                self.timeToStartLabel.text = [NSString stringWithFormat:@"Game will start in: %d", self.timeToStart];
-                [self performSelector:@selector(updateTimeLabel) withObject:nil afterDelay:1];
+                if ([[IQSettings sharedInstance] internetAvailable]) {
+                    [[IQSettings sharedInstance] showHud:@"" onView:self.view];
+                    [self performSelectorInBackground:@selector(startGame) withObject:nil];
+                } else {
+                    [self showAlertWithTitle:@"Error" message:@"No internet connection." cancelButton:@"OK"];
+                }
+//                self.timeToStartLabel.hidden = NO;
+//                self.timeToStart = 5;
+//                self.timeToStartLabel.text = [NSString stringWithFormat:@"Game will start in: %d", self.timeToStart];
+//                [self performSelector:@selector(updateTimeLabel) withObject:nil afterDelay:1];
             } else {
                 [self performSelector:@selector(refreshGame) withObject:nil afterDelay:([self.game[@"refresh_interval"] intValue] / 1000)];
             }
